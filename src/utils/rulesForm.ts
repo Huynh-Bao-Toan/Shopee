@@ -1,8 +1,8 @@
-import type { RegisterOptions } from 'react-hook-form'
+import type { RegisterOptions, UseFormGetValues } from 'react-hook-form'
 type RulesForm = {
   [key in 'email' | 'password' | 'confirm_password']?: RegisterOptions
 }
-const rulesForm: RulesForm = {
+const rulesForm = (getValues?: UseFormGetValues<any>): RulesForm => ({
   email: {
     required: { value: true, message: 'Email không được bỏ trống' },
     maxLength: {
@@ -44,8 +44,13 @@ const rulesForm: RulesForm = {
     minLength: {
       value: 6,
       message: 'Mật khẩu từ 6-160 ký tự'
+    },
+    validate: (value) => {
+      if (getValues) {
+        return value === getValues('password') || 'Mật khẩu không khớp'
+      } else undefined
     }
   }
-}
+})
 
-export { rulesForm }
+export default rulesForm

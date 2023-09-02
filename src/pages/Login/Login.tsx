@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { rulesForm } from '~/utils/rulesForm'
+import rulesForm from '~/utils/rulesForm'
+import Input from '~/components/Input'
 type Inputs = {
   email: string
   password: string
@@ -26,24 +27,22 @@ function Login() {
           >
             <div className='text-xl text-[#222] mb-5'>Đăng nhập</div>
             <div className='mt-4'>
-              <div className='min-h-[70px] mb-1'>
-                <input
-                  type='text'
-                  className=' border border-gray-300 focus:border-gray-400 outline-none  text-sm rounded-lg  block w-full p-2.5 '
-                  placeholder='Nhập email'
-                  {...register('email', rulesForm.email)}
-                />
-                <p className='mt-2 text-sm text-red-600 dark:text-red-500'>{errors.email?.message}</p>
-              </div>
-              <div className='min-h-[70px] mb-1'>
-                <input
-                  type='password'
-                  className=' border border-gray-300 focus:border-gray-400 outline-none  text-sm rounded-lg  block w-full p-2.5 '
-                  placeholder='Nhập mật khẩu'
-                  {...register('password', rulesForm.password)}
-                />
-                <p className='mt-2 text-sm text-red-600 dark:text-red-500'>{errors.password?.message}</p>
-              </div>
+              <Input
+                errorMessage={errors.email?.message}
+                name='email'
+                type='email'
+                placeholder='Nhập email'
+                register={register}
+                rules={rulesForm().email}
+              />
+              <Input
+                errorMessage={errors.password?.message}
+                name='password'
+                type='password'
+                placeholder='Nhập mật khẩu'
+                register={register}
+                rules={rulesForm().password}
+              />
             </div>
             <button className='mt-2 uppercase rounded-sm p-2 bg-orange text-sm text-center text-white outline-none border-none w-full'>
               Đăng Nhập

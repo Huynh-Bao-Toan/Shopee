@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { rulesForm } from '~/utils/rulesForm'
+import rulesForm from '~/utils/rulesForm'
+import Input from '~/components/Input'
 type Inputs = {
   email: string
   password: string
@@ -23,41 +24,36 @@ function Register() {
       >
         <div className='lg:col-span-2 lg:col-start-4  '>
           <form
+            noValidate
             onSubmit={handleSubmit(onSubmit)}
             className='bg-white rounded-sm shadow-sm p-7 mb-10 mt-14 lg:mr-3 min-h-[420px]'
           >
             <div className='text-xl text-[#222] mb-5'>Đăng ký</div>
             <div className='mt-4'>
-              <div className='min-h-[70px] mb-1'>
-                <input
-                  type='text'
-                  className=' border border-gray-300 focus:border-gray-400 outline-none  text-sm rounded-lg  block w-full p-2.5 '
-                  placeholder='Nhập email'
-                  {...register('email', rulesForm.email)}
-                />
-                <p className='mt-1 text-sm text-red-600 dark:text-red-500'>{errors.email?.message}</p>
-              </div>
-              <div className='min-h-[70px] mb-1'>
-                <input
-                  type='password'
-                  className=' border border-gray-300 focus:border-gray-400 outline-none  text-sm rounded-lg  block w-full p-2.5 '
-                  placeholder='Nhập mật khẩu'
-                  {...register('password', rulesForm.password)}
-                />
-                <p className='mt-1 text-sm text-red-600 dark:text-red-500'>{errors.password?.message}</p>
-              </div>
-              <div className='min-h-[70px] mb-1'>
-                <input
-                  type='password'
-                  className=' border border-gray-300 focus:border-gray-400 outline-none  text-sm rounded-lg  block w-full p-2.5 '
-                  placeholder='Nhập lại mật khẩu'
-                  {...register('confirm_password', {
-                    ...rulesForm.confirm_password,
-                    validate: (value) => value === getValues('password') || 'Mật khẩu không khớp'
-                  })}
-                />
-                <p className='mt-1 text-sm text-red-600 dark:text-red-500'>{errors.confirm_password?.message}</p>
-              </div>
+              <Input
+                errorMessage={errors.email?.message}
+                name='email'
+                type='email'
+                placeholder='Nhập email'
+                register={register}
+                rules={rulesForm().email}
+              />
+              <Input
+                errorMessage={errors.password?.message}
+                name='password'
+                type='password'
+                placeholder='Nhập mật khẩu'
+                register={register}
+                rules={rulesForm().password}
+              />
+              <Input
+                errorMessage={errors.confirm_password?.message}
+                name='confirm_password'
+                type='password'
+                placeholder='Nhập lại mật khẩu'
+                register={register}
+                rules={rulesForm(getValues).confirm_password}
+              />
             </div>
             <button className='uppercase rounded-sm p-2 bg-orange text-sm text-center text-white outline-none border-none w-full'>
               Đăng Ký
