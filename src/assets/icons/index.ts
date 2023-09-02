@@ -1,5 +1,8 @@
 import logoIcon from './logo.svg'
 
-export const icons = {
+interface iconsType {
+  [key: string]: string
+}
+export const icons: iconsType = {
   logoIcon
 }
