@@ -1,6 +1,17 @@
 import { Link } from 'react-router-dom'
-
+import { useForm, SubmitHandler } from 'react-hook-form'
+import { rulesForm } from '~/utils/rulesForm'
+type Inputs = {
+  email: string
+  password: string
+}
 function Login() {
+  const {
+    register,
+    formState: { errors },
+    handleSubmit
+  } = useForm<Inputs>()
+  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data)
   return (
     <div className='bg-orange w-full'>
       <div
@@ -8,29 +19,33 @@ function Login() {
         style={{ backgroundImage: 'url(/src/assets/images/sg-11134004-7rbk0-lkqed7pgsfw7b1.png)' }}
       >
         <div className='lg:col-span-2 lg:col-start-4  '>
-          <form className='bg-white rounded-sm shadow-sm p-7 mb-10 mt-14 lg:mr-3 min-h-[350px]'>
+          <form
+            noValidate
+            onSubmit={handleSubmit(onSubmit)}
+            className='bg-white rounded-sm shadow-sm p-7 mb-10 mt-14 lg:mr-3 min-h-[350px]'
+          >
             <div className='text-xl text-[#222] mb-5'>Đăng nhập</div>
             <div className='mt-4'>
               <div className='min-h-[70px] mb-1'>
                 <input
                   type='text'
-                  name='email'
                   className=' border border-gray-300 focus:border-gray-400 outline-none  text-sm rounded-lg  block w-full p-2.5 '
                   placeholder='Nhập email'
+                  {...register('email', rulesForm.email)}
                 />
-                {/* <p className='mt-2 text-sm text-red-600 dark:text-red-500'>Email không hợp lệ</p> */}
+                <p className='mt-2 text-sm text-red-600 dark:text-red-500'>{errors.email?.message}</p>
               </div>
               <div className='min-h-[70px] mb-1'>
                 <input
                   type='password'
-                  name='password'
                   className=' border border-gray-300 focus:border-gray-400 outline-none  text-sm rounded-lg  block w-full p-2.5 '
                   placeholder='Nhập mật khẩu'
+                  {...register('password', rulesForm.password)}
                 />
-                {/* <p className='mt-2 text-sm text-red-600 dark:text-red-500'>Mật khẩu không hợp lệ</p> */}
+                <p className='mt-2 text-sm text-red-600 dark:text-red-500'>{errors.password?.message}</p>
               </div>
             </div>
-            <button className='uppercase rounded-sm p-2 bg-orange text-sm text-center text-white outline-none border-none w-full'>
+            <button className='mt-2 uppercase rounded-sm p-2 bg-orange text-sm text-center text-white outline-none border-none w-full'>
               Đăng Nhập
             </button>
 
