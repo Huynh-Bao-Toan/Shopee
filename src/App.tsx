@@ -1,6 +1,9 @@
 import { Routes, Route } from 'react-router-dom'
 import { publicRoutes } from './routes'
 import { Fragment } from 'react'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 function App() {
   return (
     <>
@@ -21,6 +24,7 @@ function App() {
           )
         })}
       </Routes>
+      <ToastContainer />
     </>
   )
 }
