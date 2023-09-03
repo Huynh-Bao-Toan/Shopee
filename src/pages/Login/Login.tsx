@@ -1,17 +1,17 @@
 import { Link } from 'react-router-dom'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import rulesForm from '~/utils/rulesForm'
+import { yupResolver } from '@hookform/resolvers/yup'
 import Input from '~/components/Input'
-type Inputs = {
-  email: string
-  password: string
-}
+import { LoginSchema, loginSchema } from '~/utils/rulesForm'
+type Inputs = LoginSchema
 function Login() {
   const {
     register,
     formState: { errors },
     handleSubmit
-  } = useForm<Inputs>()
+  } = useForm<Inputs>({
+    resolver: yupResolver(loginSchema)
+  })
   const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data)
   return (
     <div className='bg-orange w-full'>
@@ -33,7 +33,6 @@ function Login() {
                 type='email'
                 placeholder='Nhập email'
                 register={register}
-                rules={rulesForm().email}
               />
               <Input
                 errorMessage={errors.password?.message}
@@ -41,7 +40,6 @@ function Login() {
                 type='password'
                 placeholder='Nhập mật khẩu'
                 register={register}
-                rules={rulesForm().password}
               />
             </div>
             <button className='mt-2 uppercase rounded-sm p-2 bg-orange text-sm text-center text-white outline-none border-none w-full'>

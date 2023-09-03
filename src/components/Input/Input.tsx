@@ -14,7 +14,7 @@ function Input({ errorMessage, name, placeholder, register, type, rules }: Input
         type={type}
         className=' border border-gray-300 focus:border-gray-400 outline-none  text-sm rounded-lg  block w-full p-2.5 '
         placeholder={placeholder}
-        {...register(name, rules)}
+        {...register(name)}
       />
       <p className='mt-1 text-sm text-red-600 dark:text-red-500'>{errorMessage}</p>
     </div>

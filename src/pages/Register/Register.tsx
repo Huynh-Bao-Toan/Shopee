@@ -1,12 +1,9 @@
 import { Link } from 'react-router-dom'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import rulesForm from '~/utils/rulesForm'
+import { yupResolver } from '@hookform/resolvers/yup'
 import Input from '~/components/Input'
-type Inputs = {
-  email: string
-  password: string
-  confirm_password: string
-}
+import { RegisterSchema, schema } from '~/utils/rulesForm'
+type Inputs = RegisterSchema
 function Register() {
   //react-hook-form
   const {
@@ -14,7 +11,9 @@ function Register() {
     handleSubmit,
     getValues,
     formState: { errors }
-  } = useForm<Inputs>()
+  } = useForm<Inputs>({
+    resolver: yupResolver(schema)
+  })
   const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data)
   return (
     <div className='bg-orange w-full'>
@@ -36,7 +35,6 @@ function Register() {
                 type='email'
                 placeholder='Nhập email'
                 register={register}
-                rules={rulesForm().email}
               />
               <Input
                 errorMessage={errors.password?.message}
@@ -44,7 +42,6 @@ function Register() {
                 type='password'
                 placeholder='Nhập mật khẩu'
                 register={register}
-                rules={rulesForm().password}
               />
               <Input
                 errorMessage={errors.confirm_password?.message}
@@ -52,7 +49,6 @@ function Register() {
                 type='password'
                 placeholder='Nhập lại mật khẩu'
                 register={register}
-                rules={rulesForm(getValues).confirm_password}
               />
             </div>
             <button className='uppercase rounded-sm p-2 bg-orange text-sm text-center text-white outline-none border-none w-full'>
