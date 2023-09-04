@@ -7,7 +7,7 @@ function RegisterHeader() {
       <div className='max-w-7xl mx-auto flex justify-between bg-white items-center'>
         <nav className='flex items-end'>
           <Link to='/'>
-            <img src={icons.logoIcon} alt='logo-shopee' className='h-6 fill-orange lg:h-10' />
+            <img src={icons.logoShopee} alt='logo-shopee' className='h-6 fill-orange lg:h-10' />
           </Link>
           <span className='text-[#222] text-2xl ml-4'>Đăng nhập</span>
         </nav>
