@@ -1,18 +1,59 @@
 import { Link } from 'react-router-dom'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { useMutation } from '@tanstack/react-query'
 import Input from '~/components/Input'
 import { LoginSchema, loginSchema } from '~/utils/rulesForm'
+import { loginAccount } from '~/apis/auth.api'
+import { ResponseApi } from '~/types/utils.type'
+import { isAxiosUnprocessableEntityError } from '~/utils/axiosHandleError'
 type Inputs = LoginSchema
 function Login() {
   const {
     register,
     formState: { errors },
-    handleSubmit
+    handleSubmit,
+    setError
   } = useForm<Inputs>({
     resolver: yupResolver(loginSchema)
   })
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data)
+  const loginMutation = useMutation({
+    mutationFn: (body: Inputs) => loginAccount(body)
+  })
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    loginMutation.mutate(data, {
+      onSuccess: (data) => console.log(data),
+      onError: (error) => {
+        if (isAxiosUnprocessableEntityError<ResponseApi<Inputs>>(error)) {
+          const formErr = error.response?.data.data
+          //handle err 2
+          if (formErr) {
+            Object.keys(formErr).map((key) => {
+              setError(key as keyof Inputs, {
+                message: formErr[key as keyof Inputs],
+                type: 'Server'
+              })
+            })
+          }
+          //handle err 1
+          /*
+          if (formErr?.email) {
+            setError('email', {
+              message: formErr.email,
+              type: 'Server'
+            })
+          }
+          if (formErr?.password) {
+            setError('password', {
+              message: formErr.password,
+              type: 'Server'
+            })
+          }
+         */
+        }
+      }
+    })
+  }
   return (
     <div className='bg-orange w-full'>
       <div
