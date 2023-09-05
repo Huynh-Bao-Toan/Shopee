@@ -1,8 +1,9 @@
 import { Link, useMatch } from 'react-router-dom'
 import { icons } from '~/assets/icons'
+import { publicRoutesPath } from '~/constants/routes.constant'
 
 function RegisterHeader() {
-  const registerMatch = useMatch('/register')
+  const registerMatch = useMatch(publicRoutesPath.register)
   const isRegisterRoute = Boolean(registerMatch)
   return (
     <header className='p-4'>

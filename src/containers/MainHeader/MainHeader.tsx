@@ -3,19 +3,22 @@ import { Link } from 'react-router-dom'
 import { logoutAccount } from '~/apis/auth.api'
 import { icons } from '~/assets/icons'
 import Popover from '~/components/Popover'
+import { privateRoutesPath, publicRoutesPath } from '~/constants/routes.constant'
 import { useAppDispatch } from '~/hooks/useAppDispatch'
 import { useAppSelector } from '~/hooks/useAppSelector'
-import { setIsAuthenticated } from '~/redux/features/auth/authSlice'
+import { setIsAuthenticated, setUserInfo } from '~/redux/features/auth/authSlice'
 
 function MainHeader() {
   const dispatch = useAppDispatch()
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
+  const userInfo = useAppSelector((state) => state.auth.userInfo)
   const logoutMutation = useMutation({
     mutationFn: () => {
       return logoutAccount()
     },
     onSuccess: () => {
       dispatch(setIsAuthenticated(false))
+      dispatch(setUserInfo(null))
     }
   })
   const handleLogout = () => {
@@ -43,28 +46,31 @@ function MainHeader() {
               className='flex justify-around items-center w-28 h-8 cursor-pointer hover:opacity-70 ml-4'
               renderPopOver={
                 <>
-                  <Link to='/profile' className='text-sm text-[#333] hover:text-cyan-500 mb-2'>
+                  <Link
+                    to={privateRoutesPath.profile}
+                    className='capitalize text-sm text-[#333] hover:text-cyan-500 mb-2'
+                  >
                     Tài khoản của tôi
                   </Link>
-                  <Link to='' className='text-sm text-[#333] hover:text-cyan-500 mb-2'>
+                  <Link to='' className='capitalize text-sm text-[#333] hover:text-cyan-500 mb-2'>
                     Đơn mua
                   </Link>
-                  <button onClick={handleLogout} className='text-sm text-[#333] hover:text-cyan-500 '>
+                  <button onClick={handleLogout} className='capitalize text-sm text-[#333] hover:text-cyan-500 '>
                     Đăng xuất
                   </button>
                 </>
               }
             >
               <img src={'/src/assets/images/avatar.png'} alt='avatar' className='w-6 h-6 object-cover rounded-full' />
-              <span className='text-sm lowercase ml-2'>baotoanhuynh</span>
+              <span className='text-sm lowercase ml-2'>{userInfo?.email}</span>
             </Popover>
           ) : (
             <>
-              <Link to='/register' className='text-sm cursor-pointer hover:opacity-70 mx-3'>
+              <Link to={publicRoutesPath.register} className='text-sm cursor-pointer hover:opacity-70 mx-3'>
                 Đăng Ký
               </Link>
               <div className='w-[1px] h-3 bg-white opacity-70' />
-              <Link to='/login' className='text-sm cursor-pointer hover:opacity-70 ml-3'>
+              <Link to={publicRoutesPath.login} className='text-sm cursor-pointer hover:opacity-70 ml-3'>
                 Đăng Nhập
               </Link>
             </>

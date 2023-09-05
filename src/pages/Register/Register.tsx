@@ -9,7 +9,8 @@ import { registerAccount } from '~/apis/auth.api'
 import { isAxiosUnprocessableEntityError } from '~/utils/axiosHandleError'
 import { ResponseApi } from '~/types/utils.type'
 import { useAppDispatch } from '~/hooks/useAppDispatch'
-import { setIsAuthenticated } from '~/redux/features/auth/authSlice'
+import { setIsAuthenticated, setUserInfo } from '~/redux/features/auth/authSlice'
+import { publicRoutesPath } from '~/constants/routes.constant'
 type Inputs = RegisterSchema
 function Register() {
   const dispatch = useAppDispatch()
@@ -29,8 +30,9 @@ function Register() {
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     const registerData = omit(data, ['confirm_password'])
     registerMutation.mutate(registerData, {
-      onSuccess: () => {
+      onSuccess: (res) => {
         dispatch(setIsAuthenticated(true))
+        dispatch(setUserInfo(res.data.data.user))
         navigate('/')
       },
       onError: (error) => {
@@ -100,9 +102,21 @@ function Register() {
                 register={register}
               />
             </div>
-            <button className='uppercase rounded-sm p-2 bg-orange text-sm text-center text-white outline-none border-none w-full'>
-              Đăng Ký
-            </button>
+            {!registerMutation.isLoading ? (
+              <button
+                className={`uppercase rounded-sm p-2 bg-orange text-sm text-center text-white outline-none border-none w-full`}
+              >
+                Đăng Ký
+              </button>
+            ) : (
+              <button
+                className={`uppercase rounded-sm p-2 bg-orange text-sm text-center text-white outline-none border-none w-full cursor-not-allowed`}
+                disabled
+              >
+                Đăng Ký
+              </button>
+            )}
+
             <div className='text-center text-sm text-[#222] mt-2 px-6'>
               Bằng việc đăng kí, bạn đã đồng ý với Shopee về{' '}
               <Link to='*' className='no-underline text-orange'>
@@ -115,7 +129,7 @@ function Register() {
             </div>
             <div className='text-center text-sm text-[#c7c7c7] mt-2 px-6'>
               Bạn đã có tài khoản?{' '}
-              <Link to='/login' className='text-orange'>
+              <Link to={publicRoutesPath.login} className='text-orange'>
                 Đăng nhập
               </Link>
             </div>

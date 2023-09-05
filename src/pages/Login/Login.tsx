@@ -8,7 +8,8 @@ import { loginAccount } from '~/apis/auth.api'
 import { ResponseApi } from '~/types/utils.type'
 import { isAxiosUnprocessableEntityError } from '~/utils/axiosHandleError'
 import { useAppDispatch } from '~/hooks/useAppDispatch'
-import { setIsAuthenticated } from '~/redux/features/auth/authSlice'
+import { setIsAuthenticated, setUserInfo } from '~/redux/features/auth/authSlice'
+import { publicRoutesPath } from '~/constants/routes.constant'
 
 type Inputs = LoginSchema
 function Login() {
@@ -27,8 +28,9 @@ function Login() {
   })
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     loginMutation.mutate(data, {
-      onSuccess: () => {
+      onSuccess: (res) => {
         dispatch(setIsAuthenticated(true))
+        dispatch(setUserInfo(res.data.data.user))
         navigate('/')
       },
       onError: (error) => {
@@ -91,13 +93,24 @@ function Login() {
                 register={register}
               />
             </div>
-            <button className='mt-2 uppercase rounded-sm p-2 bg-orange text-sm text-center text-white outline-none border-none w-full'>
-              Đăng Nhập
-            </button>
+            {!loginMutation.isLoading ? (
+              <button
+                className={`mt-2 uppercase rounded-sm p-2 bg-orange text-sm text-center text-white outline-none border-none w-full`}
+              >
+                Đăng Nhập
+              </button>
+            ) : (
+              <button
+                className={`mt-2 uppercase rounded-sm p-2 bg-orange text-sm text-center text-white outline-none border-none w-full cursor-not-allowed`}
+                disabled
+              >
+                Đăng Nhập
+              </button>
+            )}
 
             <div className='text-center text-sm text-[#c7c7c7] mt-6 px-6'>
               Bạn mới biết đến Shopee?{' '}
-              <Link to='/register' className='text-orange'>
+              <Link to={publicRoutesPath.register} className='text-orange'>
                 Đăng ký
               </Link>
             </div>
