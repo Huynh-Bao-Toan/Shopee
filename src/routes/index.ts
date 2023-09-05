@@ -2,7 +2,7 @@ import React from 'react'
 import { privateRoutesPath, publicRoutesPath } from '~/constants/routes.constant'
 import MainLayout from '~/layouts/MainLayout'
 import RegisterLayout from '~/layouts/RegisterLayout'
-import { Login, ProductList, Register, Profile } from '~/pages'
+import { Login, Register, Profile } from '~/pages'
 
 interface RoutesType {
   name: string
@@ -12,7 +12,6 @@ interface RoutesType {
 }
 
 export const publicRoutes: RoutesType[] = [
-  // { name: 'product_list', path: publicRoutesPath.product_list, component: ProductList, layout: MainLayout },
   { name: 'register', path: publicRoutesPath.register, component: Register, layout: RegisterLayout },
   { name: 'login', path: publicRoutesPath.login, component: Login, layout: RegisterLayout }
 ]

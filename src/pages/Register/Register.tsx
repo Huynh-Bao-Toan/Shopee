@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
@@ -8,8 +8,12 @@ import { RegisterSchema, schema } from '~/utils/rulesForm'
 import { registerAccount } from '~/apis/auth.api'
 import { isAxiosUnprocessableEntityError } from '~/utils/axiosHandleError'
 import { ResponseApi } from '~/types/utils.type'
+import { useAppDispatch } from '~/hooks/useAppDispatch'
+import { setIsAuthenticated } from '~/redux/features/auth/authSlice'
 type Inputs = RegisterSchema
 function Register() {
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   //react-hook-form
   const {
     setError,
@@ -25,7 +29,10 @@ function Register() {
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     const registerData = omit(data, ['confirm_password'])
     registerMutation.mutate(registerData, {
-      onSuccess: (data) => console.log(data),
+      onSuccess: () => {
+        dispatch(setIsAuthenticated(true))
+        navigate('/')
+      },
       onError: (error) => {
         if (isAxiosUnprocessableEntityError<ResponseApi<Omit<RegisterSchema, 'confirm_password'>>>(error)) {
           const formErr = error.response?.data.data

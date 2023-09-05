@@ -3,7 +3,6 @@ interface RoutesPathType {
 }
 
 export const publicRoutesPath: RoutesPathType = {
-  // product_list: '/',
   register: '/register',
   login: '/login'
 }

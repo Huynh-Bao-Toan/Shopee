@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
@@ -7,8 +7,13 @@ import { LoginSchema, loginSchema } from '~/utils/rulesForm'
 import { loginAccount } from '~/apis/auth.api'
 import { ResponseApi } from '~/types/utils.type'
 import { isAxiosUnprocessableEntityError } from '~/utils/axiosHandleError'
+import { useAppDispatch } from '~/hooks/useAppDispatch'
+import { setIsAuthenticated } from '~/redux/features/auth/authSlice'
+
 type Inputs = LoginSchema
 function Login() {
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   const {
     register,
     formState: { errors },
@@ -22,7 +27,10 @@ function Login() {
   })
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     loginMutation.mutate(data, {
-      onSuccess: (data) => console.log(data),
+      onSuccess: () => {
+        dispatch(setIsAuthenticated(true))
+        navigate('/')
+      },
       onError: (error) => {
         if (isAxiosUnprocessableEntityError<ResponseApi<Inputs>>(error)) {
           const formErr = error.response?.data.data

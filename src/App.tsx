@@ -6,9 +6,10 @@ import 'react-toastify/dist/ReactToastify.css'
 import MainLayout from './layouts/MainLayout'
 import { ProductList } from './pages'
 import { privateRoutesPath, publicRoutesPath } from './constants/routes.constant'
+import { useAppSelector } from './hooks/useAppSelector'
 
 function App() {
-  const isAuthenticated = true
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
   return (
     <>
       <Routes>
