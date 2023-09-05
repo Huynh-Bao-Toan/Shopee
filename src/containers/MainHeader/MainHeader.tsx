@@ -14,6 +14,7 @@ function MainHeader() {
                 <button className='text-sm text-[#333] hover:text-orange '>English</button>
               </>
             }
+            className='flex justify-around items-center w-28 h-8 cursor-pointer hover:opacity-70'
           >
             <img src={icons.global} alt='global-icon' className='w-4 h-4 ' />
             <span className='text-sm'>Tiếng Việt</span>
@@ -23,9 +24,15 @@ function MainHeader() {
             className='flex justify-around items-center w-28 h-8 cursor-pointer hover:opacity-70 ml-4'
             renderPopOver={
               <>
-                <button className='text-sm text-[#333] hover:text-cyan-500 mb-2'>Tài khoản của tôi</button>
-                <button className='text-sm text-[#333] hover:text-cyan-500 mb-2'>Đơn mua</button>
-                <button className='text-sm text-[#333] hover:text-cyan-500 '>Đăng xuất</button>
+                <Link to='/profile' className='text-sm text-[#333] hover:text-cyan-500 mb-2'>
+                  Tài khoản của tôi
+                </Link>
+                <Link to='' className='text-sm text-[#333] hover:text-cyan-500 mb-2'>
+                  Đơn mua
+                </Link>
+                <Link to='' className='text-sm text-[#333] hover:text-cyan-500 '>
+                  Đăng xuất
+                </Link>
               </>
             }
           >
@@ -60,9 +67,56 @@ function MainHeader() {
             </form>
           </div>
           <div className='col-span-1 justify-self-center'>
-            <Link to='/'>
-              <img src={icons.cart} alt='cart-icon' className='w-8 h-8' />
-            </Link>
+            <Popover
+              renderPopOver={
+                <>
+                  <h3 className='text-gray-400 text-sm capitalize'>sản phẩm mới thêm</h3>
+                  <div className='mt-5'>
+                    <div className='mt-4 flex'>
+                      <img
+                        src='https://down-vn.img.susercontent.com/file/sg-11134201-23020-dpfbnsqk0qnv3b_tn'
+                        alt='product'
+                        className='w-10 h-10'
+                      />
+                      <div className='ml-5'>
+                        <div className='flex'>
+                          <div className='capitalize text-sm line-clamp-1 max-w-[240px] overflow-hidden text-ellipsis'>
+                            dép đi trong nhà chống trượt thoải mái họa tiết hoạt hình{' '}
+                          </div>
+                          <div className='text-orange text-sm ml-10'>₫59.000</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className='mt-4 flex'>
+                      <img
+                        src='https://down-vn.img.susercontent.com/file/sg-11134201-23020-dpfbnsqk0qnv3b_tn'
+                        alt='product'
+                        className='w-10 h-10'
+                      />
+                      <div className='ml-5'>
+                        <div className='flex'>
+                          <div className='capitalize text-sm line-clamp-1 max-w-[240px] overflow-hidden text-ellipsis'>
+                            dép đi trong nhà chống trượt thoải mái họa tiết hoạt hình{' '}
+                          </div>
+                          <div className='text-orange text-sm ml-10'>₫59.000</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className='mt-10  w-full'>
+                    <button className='rounded-sm float-right  py-2 px-3 capitalize bg-orange text-sm text-white border-none outline-none cursor-pointer'>
+                      xem giỏ hàng
+                    </button>
+                  </div>
+                </>
+              }
+              classNamePopOver='w-[400px] max-w-[400px] bg-white shadow-lg z-50 px-2 py-3 flex flex-col justify-start items-start rounded-sm'
+              placement='bottom-end'
+            >
+              <Link to='/'>
+                <img src={icons.cart} alt='cart-icon' className='w-8 h-8' />
+              </Link>
+            </Popover>
           </div>
         </div>
       </div>
