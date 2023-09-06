@@ -12,12 +12,12 @@ function ProductList() {
         </div>
         <div className='col-span-10'>
           <Sort />
-          <div className='grid grid-cols-12 gap-4'>
+          <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4'>
             {Array(20)
               .fill(0)
               .map((_, index) => {
                 return (
-                  <div className='lg:col-span-3 md:col-span-4 col-span-6' key={index}>
+                  <div className='' key={index}>
                     <Link to={''}>
                       <Product />
                     </Link>
