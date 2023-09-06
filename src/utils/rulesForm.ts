@@ -4,7 +4,7 @@ type RulesForm = {
   [key in 'email' | 'password' | 'confirm_password']?: RegisterOptions
 }
 //default validate
-const rulesForm = (getValues?: UseFormGetValues<any>): RulesForm => ({
+export const rulesForm = (getValues?: UseFormGetValues<any>): RulesForm => ({
   email: {
     required: { value: true, message: 'Email không được bỏ trống' },
     maxLength: {

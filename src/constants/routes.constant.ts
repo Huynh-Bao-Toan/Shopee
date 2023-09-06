@@ -1,13 +1,13 @@
-enum PublicRoutesPath {
+export enum PublicRoutesPath {
   register = 'register',
   login = 'login'
 }
 
-enum PrivateRoutesPath {
+export enum PrivateRoutesPath {
   profile = 'profile'
 }
 
-type RoutesPathType<T extends Record<string, string>> = {
+export type RoutesPathType<T> = {
   [key in keyof T]: string
 }
 

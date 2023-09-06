@@ -99,7 +99,7 @@ function MainHeader() {
               <Input
                 type='text'
                 placeholder='Siêu tiệc thương hiệu'
-                classInput='text-sm bg-transparent w-full outline-none border-none text-[#333] h-full outline-none '
+                classInput='text-sm bg-transparent w-full outlineNone border-none text-[#333] h-full outline-none '
                 classError=''
                 classWrapper='flex-1 mr-3'
               />

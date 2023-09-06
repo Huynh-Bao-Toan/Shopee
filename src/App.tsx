@@ -5,7 +5,7 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import MainLayout from './layouts/MainLayout'
 import { ProductList } from './pages'
-import { privateRoutesPath, publicRoutesPath } from './constants/routes.constant'
+import { PrivateRoutesPath, PublicRoutesPath, privateRoutesPath, publicRoutesPath } from './constants/routes.constant'
 import { useAppSelector } from './hooks/useAppSelector'
 
 function App() {
@@ -53,11 +53,11 @@ function App() {
               )
             })}
         {!isAuthenticated
-          ? Object.keys(privateRoutesPath).map((route, index) => {
+          ? (Object.keys(privateRoutesPath) as (keyof typeof PrivateRoutesPath)[]).map((route, index) => {
               const path = privateRoutesPath[route]
               return <Route path={path} key={index} element={<Navigate to='/login' />} />
             })
-          : Object.keys(publicRoutesPath).map((route, index) => {
+          : (Object.keys(publicRoutesPath) as (keyof typeof PublicRoutesPath)[]).map((route, index) => {
               const path = publicRoutesPath[route]
               return <Route path={path} key={index} element={<Navigate to='/' />} />
             })}
