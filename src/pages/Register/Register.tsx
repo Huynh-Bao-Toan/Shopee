@@ -11,6 +11,7 @@ import { ResponseApi } from '~/types/utils.type'
 import { useAppDispatch } from '~/hooks/useAppDispatch'
 import { setIsAuthenticated, setUserInfo } from '~/redux/features/auth/authSlice'
 import { publicRoutesPath } from '~/constants/routes.constant'
+import Button from '~/components/Button/Button'
 type Inputs = RegisterSchema
 function Register() {
   const dispatch = useAppDispatch()
@@ -103,18 +104,13 @@ function Register() {
               />
             </div>
             {!registerMutation.isLoading ? (
-              <button
-                className={`uppercase rounded-sm p-2 bg-orange text-sm text-center text-white outline-none border-none w-full`}
-              >
-                Đăng Ký
-              </button>
+              <Button nameBtn='Đăng Ký' />
             ) : (
-              <button
-                className={`uppercase rounded-sm p-2 bg-orange text-sm text-center text-white outline-none border-none w-full cursor-not-allowed`}
+              <Button
+                nameBtn='Đăng Ký'
+                className='mt-2 uppercase rounded-sm p-2 bg-orange text-sm text-center text-white outline-none border-none w-full cursor-not-allowed'
                 disabled
-              >
-                Đăng Ký
-              </button>
+              />
             )}
 
             <div className='text-center text-sm text-[#222] mt-2 px-6'>

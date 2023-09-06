@@ -2,6 +2,8 @@ import { useMutation } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import { logoutAccount } from '~/apis/auth.api'
 import { icons } from '~/assets/icons'
+import Button from '~/components/Button/Button'
+import Input from '~/components/Input'
 import Popover from '~/components/Popover'
 import { privateRoutesPath, publicRoutesPath } from '~/constants/routes.constant'
 import { useAppDispatch } from '~/hooks/useAppDispatch'
@@ -31,8 +33,8 @@ function MainHeader() {
           <Popover
             renderPopOver={
               <>
-                <button className='text-sm text-[#333] hover:text-orange mb-2'>Tiếng Việt</button>
-                <button className='text-sm text-[#333] hover:text-orange '>English</button>
+                <Button className='text-sm text-[#333] hover:text-orange mb-2' nameBtn='Tiếng Việt' />
+                <Button className='text-sm text-[#333] hover:text-orange ' nameBtn='English' />
               </>
             }
             className='flex justify-around items-center w-28 h-8 cursor-pointer hover:opacity-70'
@@ -55,9 +57,11 @@ function MainHeader() {
                   <Link to='' className='capitalize text-sm text-[#333] hover:text-cyan-500 mb-2'>
                     Đơn mua
                   </Link>
-                  <button onClick={handleLogout} className='capitalize text-sm text-[#333] hover:text-cyan-500 '>
-                    Đăng xuất
-                  </button>
+                  <Button
+                    className='capitalize text-sm text-[#333] hover:text-cyan-500'
+                    nameBtn='Đăng xuất'
+                    onClick={handleLogout}
+                  />
                 </>
               }
             >
@@ -92,14 +96,16 @@ function MainHeader() {
           </div>
           <div className='col-span-9'>
             <form className='flex items-center bg-white w-full h-full p-3 rounded-md'>
-              <input
+              <Input
                 type='text'
                 placeholder='Siêu tiệc thương hiệu'
-                className='text-sm bg-transparent flex-1 outline-none border-none text-[#333] h-full'
+                classInput='text-sm bg-transparent w-full outline-none border-none text-[#333] h-full outline-none '
+                classError=''
+                classWrapper='flex-1 mr-3'
               />
-              <button className='bg-orange p-2 rounded-sm w-14 h-8 flex justify-center items-center border-none cursor-pointer'>
+              <Button className='bg-orange p-2 rounded-sm w-14 h-8 flex justify-center items-center border-none cursor-pointer'>
                 <img src={icons.search} alt='search-icon' className='w-5 h-5' />
-              </button>
+              </Button>
             </form>
           </div>
           <div className='col-span-1 justify-self-center'>

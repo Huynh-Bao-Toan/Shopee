@@ -1,22 +1,28 @@
 import type { RegisterOptions, UseFormRegister } from 'react-hook-form'
-interface InputProps {
-  type: React.HTMLInputTypeAttribute
-  placeholder?: string
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   errorMessage?: string
-  name: string
-  register: UseFormRegister<any>
+  register?: UseFormRegister<any>
   rules?: RegisterOptions
+  classWrapper?: string
+  classError?: string
+  classInput?: string
 }
-function Input({ errorMessage, name, placeholder, register, type, rules }: InputProps) {
+function Input(props: InputProps) {
+  const {
+    errorMessage,
+    name,
+    register,
+    rules,
+    classError = 'mt-1 text-sm text-red-600 dark:text-red-500',
+    classWrapper = 'min-h-[70px] mb-1',
+    classInput = 'border border-gray-300 focus:border-gray-400 outline-none  text-sm rounded-lg  block w-full p-2.5',
+    ...rest
+  } = props
+  const registerResult = name && register ? register(name) : {}
   return (
-    <div className='min-h-[70px] mb-1'>
-      <input
-        type={type}
-        className=' border border-gray-300 focus:border-gray-400 outline-none  text-sm rounded-lg  block w-full p-2.5 '
-        placeholder={placeholder}
-        {...register(name)}
-      />
-      <p className='mt-1 text-sm text-red-600 dark:text-red-500'>{errorMessage}</p>
+    <div className={classWrapper}>
+      <input {...registerResult} {...rest} className={classInput} />
+      <p className={classError}>{errorMessage}</p>
     </div>
   )
 }

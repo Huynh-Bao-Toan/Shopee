@@ -10,6 +10,7 @@ import { isAxiosUnprocessableEntityError } from '~/utils/axiosHandleError'
 import { useAppDispatch } from '~/hooks/useAppDispatch'
 import { setIsAuthenticated, setUserInfo } from '~/redux/features/auth/authSlice'
 import { publicRoutesPath } from '~/constants/routes.constant'
+import Button from '~/components/Button/Button'
 
 type Inputs = LoginSchema
 function Login() {
@@ -94,18 +95,13 @@ function Login() {
               />
             </div>
             {!loginMutation.isLoading ? (
-              <button
-                className={`mt-2 uppercase rounded-sm p-2 bg-orange text-sm text-center text-white outline-none border-none w-full`}
-              >
-                Đăng Nhập
-              </button>
+              <Button nameBtn='Đăng Nhập' />
             ) : (
-              <button
-                className={`mt-2 uppercase rounded-sm p-2 bg-orange text-sm text-center text-white outline-none border-none w-full cursor-not-allowed`}
+              <Button
+                nameBtn='Đăng Nhập'
+                className='mt-2 uppercase rounded-sm p-2 bg-orange text-sm text-center text-white outline-none border-none w-full cursor-not-allowed'
                 disabled
-              >
-                Đăng Nhập
-              </button>
+              />
             )}
 
             <div className='text-center text-sm text-[#c7c7c7] mt-6 px-6'>

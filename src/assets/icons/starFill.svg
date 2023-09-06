@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 9.5 8" >
+  <defs>
+    <linearGradient id="ratingStarGradient" x1="50%" x2="50%" y1="0%" y2="100%">
+      <stop offset="0" stop-color="#ffca11"></stop>
+      <stop offset="1" stop-color="#ffad27"></stop>
+    </linearGradient>
+  </defs>
+  <polygon fill="url(#ratingStarGradient)" fill-rule="evenodd" stroke="none" stroke-width="1" points="4.75 0 5.9633058 2.66171903 8.75 3.1656353 6.11592395 4.3489788 6.625 7.5 4.75 6 2.875 7.5 3.38407605 4.3489788 0.75 3.1656353 3.53669421 2.66171903"/>
+</svg>

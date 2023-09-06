@@ -8,7 +8,7 @@ function MainLayout({ children }: MainLayoutProps) {
   return (
     <div className=''>
       <MainHeader />
-      <div className='mt-32'>{children}</div>
+      <div className='mt-32 bg-gray-200'>{children}</div>
       <Footer />
     </div>
   )
