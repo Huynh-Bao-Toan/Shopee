@@ -4,8 +4,11 @@ import Product from './Product'
 import { useQuery } from '@tanstack/react-query'
 import { useQueryParams } from '~/hooks/useQueryParams'
 import { getProductList } from '~/apis/product.api'
+import Panigation from '~/components/Panigation'
+import { useState } from 'react'
 
 function ProductList() {
+  const [page, setPage] = useState<number>(1)
   const queryParams = useQueryParams()
   const { data } = useQuery({
     queryKey: ['productList', queryParams],
@@ -29,6 +32,7 @@ function ProductList() {
                 )
               })}
           </div>
+          <Panigation pageCurrent={page} setPage={setPage} />
         </div>
       </div>
     </div>

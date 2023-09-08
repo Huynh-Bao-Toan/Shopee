@@ -38,7 +38,7 @@ function AsideFilter() {
           <form>
             <div className='flex items-center justify-between'>
               <Input placeholder='₫ TỪ' type='text' classWrapper='max-h-[40px] mb-3' />
-              <div className='bg-[#bdbdbd]  mx-4 h-6 w-6' />
+              <div className='bg-[#bdbdbd]  mx-4 h-[2px] w-6' />
               <Input placeholder='₫ ĐẾN' type='text' classWrapper='max-h-[40px] mb-3' />
             </div>
             <Button nameBtn='Áp dụng' />
