@@ -36,9 +36,9 @@ function ProductList() {
           <AsideFilter />
         </div>
         <div className='col-span-10'>
-          <Sort />
           {data && (
             <>
+              <Sort queryConfig={queryConfig} pageSize={data.data.data.pagination.page_size} />
               <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4'>
                 {data?.data.data.products.map((product) => {
                   return (
