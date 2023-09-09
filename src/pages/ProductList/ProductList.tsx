@@ -5,14 +5,29 @@ import { useQuery } from '@tanstack/react-query'
 import { useQueryParams } from '~/hooks/useQueryParams'
 import { getProductList } from '~/apis/product.api'
 import Panigation from '~/components/Panigation'
-import { useState } from 'react'
+import { ProductListConfig } from '~/types/product.type'
+import { isUndefined, omitBy } from 'lodash'
 
 function ProductList() {
-  const [page, setPage] = useState<number>(1)
-  const queryParams = useQueryParams()
+  const queryParams: ProductListConfig = useQueryParams()
+  const queryConfig: { [key in keyof ProductListConfig]: string } = omitBy(
+    {
+      exclude: queryParams.exclude,
+      limit: queryParams.limit,
+      name: queryParams.name,
+      order: queryParams.order,
+      page: queryParams.page || 1,
+      price_max: queryParams.price_max,
+      price_min: queryParams.price_min,
+      rating_filter: queryParams.rating_filter,
+      sort_by: queryParams.sort_by
+    },
+    isUndefined
+  )
   const { data } = useQuery({
     queryKey: ['productList', queryParams],
-    queryFn: () => getProductList(queryParams)
+    queryFn: () => getProductList(queryParams),
+    keepPreviousData: true
   })
   return (
     <div className=''>
@@ -22,17 +37,20 @@ function ProductList() {
         </div>
         <div className='col-span-10'>
           <Sort />
-          <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4'>
-            {data &&
-              data?.data.data.products.map((product) => {
-                return (
-                  <div className='' key={product._id}>
-                    <Product {...product} />
-                  </div>
-                )
-              })}
-          </div>
-          <Panigation pageCurrent={page} setPage={setPage} />
+          {data && (
+            <>
+              <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4'>
+                {data?.data.data.products.map((product) => {
+                  return (
+                    <div className='' key={product._id}>
+                      <Product {...product} />
+                    </div>
+                  )
+                })}
+              </div>
+              <Panigation queryConfig={queryConfig} pageSize={data.data.data.pagination.page_size} />
+            </>
+          )}
         </div>
       </div>
     </div>
