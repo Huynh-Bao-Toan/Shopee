@@ -8,7 +8,7 @@ import chevronRight from './chevron-right.svg'
 import starFill from './starFill.svg'
 import listBullet from './listBullet.svg'
 import funnel from './funnel.svg'
-enum IconKeys {
+export enum IconKeys {
   logoShopee = 'logoShopee',
   global = 'global',
   chevronDown = 'chevronDown',

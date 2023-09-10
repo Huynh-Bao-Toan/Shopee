@@ -1,5 +1,6 @@
 import type { RegisterOptions, UseFormGetValues } from 'react-hook-form'
 import * as yup from 'yup'
+
 type RulesForm = {
   [key in 'email' | 'password' | 'confirm_password']?: RegisterOptions
 }
@@ -55,7 +56,6 @@ export const rulesForm = (getValues?: UseFormGetValues<any>): RulesForm => ({
   }
 })
 
-//yup validate
 export const schema = yup.object({
   email: yup
     .string()
@@ -73,9 +73,35 @@ export const schema = yup.object({
     .required('Nhập lại mật khẩu là bắt buộc')
     .max(160, 'Mật khẩu không được quá 160 ký tự')
     .min(6, 'Mật khẩu từ 6-160 ký tự')
-    .oneOf([yup.ref('password')], 'Mật khẩu không khớp')
+    .oneOf([yup.ref('password')], 'Mật khẩu không khớp'),
+  price_min: yup.string().test({
+    name: 'price-not-allowed',
+    message: 'Giá không phù hợp',
+    test: function (value) {
+      const price_min = value
+      const { price_max } = this.parent as { price_min: string; price_max: string }
+      if (price_min !== '' && price_max !== '') {
+        return Number(price_max) >= Number(price_min)
+      }
+      return price_min !== '' || price_max !== ''
+    }
+  }),
+  price_max: yup.string().test({
+    name: 'price-not-allowed',
+    message: 'Giá không phù hợp',
+    test: function (value) {
+      const price_max = value
+      const { price_min } = this.parent as { price_min: string; price_max: string }
+      if (price_min !== '' && price_max !== '') {
+        return Number(price_max) >= Number(price_min)
+      }
+      return price_min !== '' || price_max !== ''
+    }
+  })
 })
-export const loginSchema = schema.omit(['confirm_password'])
+export const loginSchema = schema.pick(['email', 'password'])
+export const priceSchema = schema.pick(['price_max', 'price_min'])
 
 export type RegisterSchema = yup.InferType<typeof schema>
 export type LoginSchema = yup.InferType<typeof loginSchema>
+export type PriceSchema = yup.InferType<typeof priceSchema>

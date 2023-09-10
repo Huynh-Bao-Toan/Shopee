@@ -1,16 +1,49 @@
+import { yupResolver } from '@hookform/resolvers/yup'
 import { omit } from 'lodash'
-import { Link, createSearchParams } from 'react-router-dom'
+import { Controller, useForm } from 'react-hook-form'
+import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 import { icons } from '~/assets/icons'
 import Button from '~/components/Button/Button'
-import Input from '~/components/Input'
+import InputNumber from '~/components/InputNumber'
 import { categoriesResponse } from '~/types/categories.type'
 import { ProductListConfig } from '~/types/product.type'
+import { PriceSchema, priceSchema } from '~/utils/rulesForm'
+import RatingStar from '../RatingStar'
 interface AsideFilterProps {
   categories: categoriesResponse
   queryConfig: { [key in keyof ProductListConfig]: string }
 }
 function AsideFilter(props: AsideFilterProps) {
   const { categories, queryConfig } = props
+  const naviagte = useNavigate()
+  const {
+    control,
+    handleSubmit,
+    trigger,
+    formState: { errors }
+  } = useForm<PriceSchema>({
+    defaultValues: {
+      price_min: '',
+      price_max: ''
+    },
+    resolver: yupResolver(priceSchema)
+  })
+  const onSubmit = handleSubmit((data) => {
+    naviagte({
+      pathname: '/',
+      search: createSearchParams({
+        ...queryConfig,
+        price_max: data.price_max || '',
+        price_min: data.price_min || ''
+      }).toString()
+    })
+  })
+  const handleFilterClear = () => {
+    naviagte({
+      pathname: '/',
+      search: createSearchParams(omit(queryConfig, ['category', 'price_max', 'price_min', 'rating_filter'])).toString()
+    })
+  }
   return (
     <div className='w-full'>
       <div className='ml-4'>
@@ -55,41 +88,58 @@ function AsideFilter(props: AsideFilterProps) {
         </div>
         <div className=' py-4'>
           <div className='text-sm capitalize mb-3'>khoảng giá</div>
-          <form>
+          <form onSubmit={onSubmit}>
             <div className='flex items-center justify-between'>
-              <Input placeholder='₫ TỪ' type='text' classWrapper='max-h-[40px] mb-3' />
+              <Controller
+                name='price_min'
+                control={control}
+                render={({ field }) => {
+                  return (
+                    <InputNumber
+                      placeholder='₫ TỪ'
+                      type='text'
+                      classWrapper='max-h-[40px] mb-3'
+                      onChange={(e) => {
+                        field.onChange(e)
+                        trigger('price_max')
+                      }}
+                      value={field.value}
+                      classError='hidden'
+                    />
+                  )
+                }}
+              />
               <div className='bg-[#bdbdbd]  mx-4 h-[2px] w-6' />
-              <Input placeholder='₫ ĐẾN' type='text' classWrapper='max-h-[40px] mb-3' />
+              <Controller
+                name='price_max'
+                control={control}
+                render={({ field }) => {
+                  return (
+                    <InputNumber
+                      placeholder='₫ ĐẾN'
+                      type='text'
+                      classWrapper='max-h-[40px] mb-3'
+                      onChange={(e) => {
+                        field.onChange(e)
+                        trigger('price_min')
+                      }}
+                      value={field.value}
+                      classError='hidden'
+                    />
+                  )
+                }}
+              />
             </div>
+            <div className='mt-1 text-sm text-red-600 dark:text-red-500 text-center'>{errors.price_min?.message}</div>
             <Button nameBtn='Áp dụng' />
           </form>
         </div>
         <div className=' py-4'>
           <div className='text-sm capitalize mb-3'>đánh giá</div>
-          <ul className='list-none'>
-            <li className='px-3 mt-2'>
-              <Link to='' className='flex items-center'>
-                {Array(5)
-                  .fill(0)
-                  .map((_, index) => {
-                    return <img src={icons.starFill} alt='star-fill' key={index} />
-                  })}
-              </Link>
-            </li>
-            <li className='px-3 mt-2'>
-              <Link to='' className='flex items-center'>
-                {Array(5)
-                  .fill(0)
-                  .map((_, index) => {
-                    return <img src={icons.starFill} alt='star-fill' key={index} />
-                  })}
-                <span className='text-sm'>trở lên</span>
-              </Link>
-            </li>
-          </ul>
+          <RatingStar queryConfig={queryConfig} />
         </div>
         <div className='mt-3'>
-          <Button nameBtn='xóa tất cả' />
+          <Button nameBtn='xóa tất cả' onClick={handleFilterClear} />
         </div>
       </div>
     </div>
