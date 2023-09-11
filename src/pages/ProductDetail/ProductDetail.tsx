@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import DOMPurify from 'dompurify'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { getProductDetail } from '~/apis/product.api'
 import Button from '~/components/Button/Button'
@@ -13,12 +13,18 @@ import { calculatorDiscountPercent } from '~/utils/utils'
 function ProductDetail() {
   const [activeImage, setActiveImage] = useState<string>()
   const [slideImages, setSlideImage] = useState<number[]>([0, 5])
+  const imageRef = useRef<HTMLImageElement>(null)
   const { id } = useParams()
   const { data } = useQuery({
     queryKey: ['product', id],
     queryFn: () => getProductDetail(id as string)
   })
   const product = data?.data.data
+  useEffect(() => {
+    if (product && product.images.length > 0) {
+      setActiveImage(product.images[0])
+    }
+  }, [product])
   const handleImageActive = (image: string) => {
     setActiveImage(image)
   }
@@ -32,19 +38,45 @@ function ProductDetail() {
       setSlideImage((prev) => [prev[0] - 1, prev[1] - 1])
     }
   }
-  useEffect(() => {
-    if (product && product.images.length > 0) {
-      setActiveImage(product.images[0])
-    }
-  }, [product])
+  const handleZoom = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const rect = event.currentTarget.getBoundingClientRect()
+    const image = imageRef.current as HTMLImageElement
+    const { naturalHeight, naturalWidth } = image
+    // Cách 1: Lấy offsetX, offsetY đơn giản khi chúng ta đã xử lý được bubble event
+    // const { offsetX, offsetY } = event.nativeEvent
+
+    // Cách 2: Lấy offsetX, offsetY khi chúng ta không xử lý được bubble event
+    const offsetX = event.pageX - (rect.x + window.scrollX)
+    const offsetY = event.pageY - (rect.y + window.scrollY)
+
+    const top = offsetY * (1 - naturalHeight / rect.height)
+    const left = offsetX * (1 - naturalWidth / rect.width)
+    image.style.width = naturalWidth + 'px'
+    image.style.height = naturalHeight + 'px'
+    image.style.maxWidth = 'unset'
+    image.style.top = top + 'px'
+    image.style.left = left + 'px'
+  }
+  const handleRemoveZoom = () => {
+    imageRef.current?.removeAttribute('style')
+  }
   if (!product) return null
   return (
     <div className='max-w-7xl mx-auto py-10'>
       <div className='bg-white rounded-md p-3'>
         <div className='grid grid-cols-12 gap-9'>
           <div className='col-span-5'>
-            <div className='relative w-full pt-[100%] h-[450px]'>
-              <img src={activeImage} alt={activeImage} className='absolute  top-0 left-0 w-full h-full' />
+            <div
+              className='relative w-full pt-[100%] h-[450px] cursor-zoom-in overflow-hidden'
+              onMouseMove={handleZoom}
+              onMouseLeave={handleRemoveZoom}
+            >
+              <img
+                src={activeImage}
+                alt={activeImage}
+                ref={imageRef}
+                className='absolute  top-0 left-0 w-full h-full'
+              />
             </div>
             <div className='relative grid grid-cols-5 gap-1 mt-2'>
               <button
