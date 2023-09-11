@@ -1,21 +1,42 @@
 import { useQuery } from '@tanstack/react-query'
 import DOMPurify from 'dompurify'
+import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { getProductDetail } from '~/apis/product.api'
-import { IconKeys, icons } from '~/assets/icons'
 import Button from '~/components/Button/Button'
 import InputNumber from '~/components/InputNumber'
 import ProductRating from '~/components/ProductRating'
+import { Product } from '~/types/product.type'
 import { formatNumberToSocial, formatPrice } from '~/utils/formatPrice'
 import { calculatorDiscountPercent } from '~/utils/utils'
 
 function ProductDetail() {
+  const [activeImage, setActiveImage] = useState<string>()
+  const [slideImages, setSlideImage] = useState<number[]>([0, 5])
   const { id } = useParams()
   const { data } = useQuery({
     queryKey: ['product', id],
     queryFn: () => getProductDetail(id as string)
   })
   const product = data?.data.data
+  const handleImageActive = (image: string) => {
+    setActiveImage(image)
+  }
+  const handleNextSlide = () => {
+    if (slideImages[1] < (product as Product).images.length) {
+      setSlideImage((prev) => [prev[0] + 1, prev[1] + 1])
+    }
+  }
+  const handlePreviousSlide = () => {
+    if (slideImages[0] > 0) {
+      setSlideImage((prev) => [prev[0] - 1, prev[1] - 1])
+    }
+  }
+  useEffect(() => {
+    if (product && product.images.length > 0) {
+      setActiveImage(product.images[0])
+    }
+  }, [product])
   if (!product) return null
   return (
     <div className='max-w-7xl mx-auto py-10'>
@@ -23,23 +44,51 @@ function ProductDetail() {
         <div className='grid grid-cols-12 gap-9'>
           <div className='col-span-5'>
             <div className='relative w-full pt-[100%] h-[450px]'>
-              <img src={product.image} alt={product.image} className='absolute  top-0 left-0 w-full h-full' />
+              <img src={activeImage} alt={activeImage} className='absolute  top-0 left-0 w-full h-full' />
             </div>
             <div className='relative grid grid-cols-5 gap-1 mt-2'>
-              <button className='absolute left-0 top-1/2 z-10 h-9 w-5 -translate-y-1/2 bg-black/20 text-white'>
-                <img src={icons.chevronLeft} alt={IconKeys.chevronLeft} />
+              <button
+                className='absolute left-0 top-1/2 z-10 h-9 w-5 -translate-y-1/2 bg-black/40 text-white'
+                onClick={handlePreviousSlide}
+              >
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth='1.5'
+                  stroke='currentColor'
+                  className='text-white'
+                >
+                  <path strokeLinecap='round' strokeLinejoin='round' d='M15.75 19.5L8.25 12l7.5-7.5' />
+                </svg>
               </button>
-              {product.images.slice(0, 5).map((image, index) => {
-                const isActive = index === 0
+              {product.images.slice(...slideImages).map((image) => {
+                const isActive = image === activeImage
                 return (
-                  <div className='relative w-full pt-[100%] cursor-pointer' key={index}>
+                  <div
+                    className='relative w-full pt-[100%] cursor-pointer'
+                    key={image}
+                    onMouseEnter={() => handleImageActive(image)}
+                  >
                     <img src={image} alt={image} className='absolute  top-0 left-0 w-full h-full' />
                     {isActive && <div className='absolute inset-0 border-2 border-orange' />}
                   </div>
                 )
               })}
-              <button className='absolute right-0 top-1/2 z-10 h-9 w-5 -translate-y-1/2 bg-black/20 text-white'>
-                <img src={icons.chevronRight} alt={IconKeys.chevronRight} />
+              <button
+                className='absolute right-0 top-1/2 z-10 h-9 w-5 -translate-y-1/2 bg-black/40 text-white'
+                onClick={handleNextSlide}
+              >
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth='1.5'
+                  stroke='currentColor'
+                  className='text-white'
+                >
+                  <path strokeLinecap='round' strokeLinejoin='round' d='M8.25 4.5l7.5 7.5-7.5 7.5' />
+                </svg>
               </button>
             </div>
           </div>
