@@ -8,13 +8,14 @@ import InputNumber from '~/components/InputNumber'
 import ProductRating from '~/components/ProductRating'
 import { Product } from '~/types/product.type'
 import { formatNumberToSocial, formatPrice } from '~/utils/formatPrice'
-import { calculatorDiscountPercent } from '~/utils/utils'
+import { calculatorDiscountPercent, getIdFromNameId } from '~/utils/utils'
 
 function ProductDetail() {
   const [activeImage, setActiveImage] = useState<string>()
   const [slideImages, setSlideImage] = useState<number[]>([0, 5])
   const imageRef = useRef<HTMLImageElement>(null)
-  const { id } = useParams()
+  const { nameId } = useParams()
+  const id = getIdFromNameId(nameId as string)
   const { data } = useQuery({
     queryKey: ['product', id],
     queryFn: () => getProductDetail(id as string)

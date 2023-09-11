@@ -23,7 +23,7 @@ function App() {
           }
         />
         <Route
-          path=':id'
+          path=':nameId'
           element={
             <MainLayout>
               <ProductDetail />
