@@ -8,7 +8,6 @@ import Panigation from '~/components/Panigation'
 import { ProductListConfig } from '~/types/product.type'
 import { isUndefined, omitBy } from 'lodash'
 import { getCategories } from '~/apis/categories.api'
-import { Outlet } from 'react-router-dom'
 
 function ProductList() {
   const queryParams: ProductListConfig = useQueryParams()
