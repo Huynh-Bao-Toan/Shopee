@@ -4,9 +4,9 @@ import { Product as ProductType } from '~/types/product.type'
 import { formatNumberToSocial, formatPrice } from '~/utils/formatPrice'
 
 function Product(props: ProductType) {
-  const { image, name, price, price_before_discount, sold, rating } = props
+  const { _id, image, name, price, price_before_discount, sold, rating } = props
   return (
-    <Link to='/'>
+    <Link to={`/${_id}`}>
       <div className='bg-white shadow rounded-sm hover:translate-y-[-0.04rem] hover:shadow-md duration-100 transition-transform overflow-hidden'>
         <div className='w-full pt-[100%] relative'>
           <img src={image} alt={name} className='absolute top-0 left-0 bg-white w-full h-full object-cover' />

@@ -7,6 +7,7 @@ import MainLayout from './layouts/MainLayout'
 import { ProductList } from './pages'
 import { PrivateRoutesPath, PublicRoutesPath, privateRoutesPath, publicRoutesPath } from './constants/routes.constant'
 import { useAppSelector } from './hooks/useAppSelector'
+import ProductDetail from './pages/ProductDetail'
 
 function App() {
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
@@ -18,6 +19,14 @@ function App() {
           element={
             <MainLayout>
               <ProductList />
+            </MainLayout>
+          }
+        />
+        <Route
+          path=':id'
+          element={
+            <MainLayout>
+              <ProductDetail />
             </MainLayout>
           }
         />
