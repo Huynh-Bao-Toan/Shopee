@@ -1,5 +1,8 @@
+import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
-import { Link } from 'react-router-dom'
+import { omit } from 'lodash'
+import { useForm } from 'react-hook-form'
+import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 import { logoutAccount } from '~/apis/auth.api'
 import { icons } from '~/assets/icons'
 import Button from '~/components/Button/Button'
@@ -8,9 +11,17 @@ import Popover from '~/components/Popover'
 import { privateRoutesPath, publicRoutesPath } from '~/constants/routes.constant'
 import { useAppDispatch } from '~/hooks/useAppDispatch'
 import { useAppSelector } from '~/hooks/useAppSelector'
+import useQueryConfig from '~/hooks/useQueryConfig'
 import { setIsAuthenticated, setUserInfo } from '~/redux/features/auth/authSlice'
+import { SearchSchema, searchSchema } from '~/utils/rulesForm'
 
 function MainHeader() {
+  const queryConfig = useQueryConfig()
+  const navigate = useNavigate()
+  const { register, handleSubmit } = useForm<SearchSchema>({
+    resolver: yupResolver(searchSchema)
+  })
+
   const dispatch = useAppDispatch()
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
   const userInfo = useAppSelector((state) => state.auth.userInfo)
@@ -26,6 +37,16 @@ function MainHeader() {
   const handleLogout = () => {
     logoutMutation.mutate()
   }
+  const onSubmit = handleSubmit((data) => {
+    const config = queryConfig.order
+      ? omit({ ...queryConfig, name: data.name }, ['order', 'sort_by'])
+      : { ...queryConfig, name: data.name }
+    navigate({
+      pathname: '/',
+      search: createSearchParams(config).toString()
+    })
+  })
+  // console.log(watch())
   return (
     <header className='text-white bg-[linear-gradient(180deg,#f53d2d,#f63)] fixed top-0 left-0 right-0 bottom-0 z-50 max-h-32'>
       <div className='max-w-7xl mx-auto'>
@@ -95,13 +116,15 @@ function MainHeader() {
             </Link>
           </div>
           <div className='col-span-9'>
-            <form className='flex items-center bg-white w-full h-full p-3 rounded-md'>
+            <form className='flex items-center bg-white w-full h-full p-3 rounded-md' onSubmit={onSubmit}>
               <Input
                 type='text'
                 placeholder='Siêu tiệc thương hiệu'
                 classInput='text-sm bg-transparent w-full outlineNone border-none text-[#333] h-full outline-none '
                 classError=''
                 classWrapper='flex-1 mr-3'
+                register={register}
+                name='name'
               />
               <Button className='bg-orange p-2 rounded-sm w-14 h-8 flex justify-center items-center border-none cursor-pointer'>
                 <img src={icons.search} alt='search-icon' className='w-5 h-5' />
