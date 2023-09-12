@@ -1,8 +1,5 @@
-import type { RegisterOptions, UseFormRegister } from 'react-hook-form'
-interface InputNumberProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputNumberProps extends React.InputHTMLAttributes<HTMLInputElement> {
   errorMessage?: string
-  register?: UseFormRegister<any>
-  rules?: RegisterOptions
   classWrapper?: string
   classError?: string
   classInput?: string

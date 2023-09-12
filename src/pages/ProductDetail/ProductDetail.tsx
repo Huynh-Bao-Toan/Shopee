@@ -4,16 +4,17 @@ import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { getProductDetail, getProductList } from '~/apis/product.api'
 import Button from '~/components/Button/Button'
-import InputNumber from '~/components/InputNumber'
 import ProductRating from '~/components/ProductRating'
 import { Product as ProductType, ProductListConfig } from '~/types/product.type'
 import { formatNumberToSocial, formatPrice } from '~/utils/formatPrice'
 import { calculatorDiscountPercent, getIdFromNameId } from '~/utils/utils'
 import Product from '../ProductList/Product'
+import QuantityController from '~/components/QuantityController'
 
 function ProductDetail() {
   const [activeImage, setActiveImage] = useState<string>()
   const [slideImages, setSlideImage] = useState<number[]>([0, 5])
+  const [quantity, setQuantity] = useState<number>(1)
   const imageRef = useRef<HTMLImageElement>(null)
   const { nameId } = useParams()
   const id = getIdFromNameId(nameId as string)
@@ -69,6 +70,7 @@ function ProductDetail() {
   const handleRemoveZoom = () => {
     imageRef.current?.removeAttribute('style')
   }
+
   if (!product) return null
   return (
     <div className='max-w-7xl mx-auto py-10'>
@@ -160,22 +162,7 @@ function ProductDetail() {
             </div>
             <div className='flex items-center mt-8'>
               <span className='text-gray-500 text-sm mr-4'>Số Lượng</span>
-              <div className='flex items-center mr-4 border border-solid border-gray-400 rounded-sm'>
-                <Button
-                  className='flex items-center justify-center  p-1 bg-white text-sm text-center text-[#333] outline-none  w-[32px] h-[32px]'
-                  nameBtn='-'
-                />
-                <InputNumber
-                  value={1}
-                  classWrapper=''
-                  classInput='bg-white text-sm text-center text-[#333] outline-none border-x border-x-solid border-gray-400 w-[32px] h-[32px]'
-                  classError='hidden'
-                />
-                <Button
-                  className='flex items-center justify-center  p-1 bg-white text-sm text-center text-[#333] outline-none  w-[32px] h-[32px]'
-                  nameBtn='+'
-                />
-              </div>
+              <QuantityController quantity={quantity} max={product.quantity} setQuantity={setQuantity} />
               <span className='text-gray-500 text-sm mr-4'>{product.quantity} sản phẩm có sẵn</span>
             </div>
             <div className='flex items-center mt-8'>
