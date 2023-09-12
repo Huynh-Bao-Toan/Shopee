@@ -2,13 +2,14 @@ import { useQuery } from '@tanstack/react-query'
 import DOMPurify from 'dompurify'
 import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
-import { getProductDetail } from '~/apis/product.api'
+import { getProductDetail, getProductList } from '~/apis/product.api'
 import Button from '~/components/Button/Button'
 import InputNumber from '~/components/InputNumber'
 import ProductRating from '~/components/ProductRating'
-import { Product } from '~/types/product.type'
+import { Product as ProductType, ProductListConfig } from '~/types/product.type'
 import { formatNumberToSocial, formatPrice } from '~/utils/formatPrice'
 import { calculatorDiscountPercent, getIdFromNameId } from '~/utils/utils'
+import Product from '../ProductList/Product'
 
 function ProductDetail() {
   const [activeImage, setActiveImage] = useState<string>()
@@ -26,11 +27,18 @@ function ProductDetail() {
       setActiveImage(product.images[0])
     }
   }, [product])
+  const queryConfig: ProductListConfig = { limit: 20, page: 1, category: product?.category._id }
+  const { data: productList } = useQuery({
+    queryKey: ['productList', queryConfig],
+    queryFn: () => getProductList(queryConfig),
+    staleTime: 3 * 60 * 1000,
+    enabled: Boolean(product)
+  })
   const handleImageActive = (image: string) => {
     setActiveImage(image)
   }
   const handleNextSlide = () => {
-    if (slideImages[1] < (product as Product).images.length) {
+    if (slideImages[1] < (product as ProductType).images.length) {
       setSlideImage((prev) => [prev[0] + 1, prev[1] + 1])
     }
   }
@@ -199,6 +207,20 @@ function ProductDetail() {
       </div>
       <div className='mt-8 bg-white rounded-md p-3 leading-6'>
         <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.description) }}></div>
+      </div>
+      <div className='mt-8  '>
+        <div className='uppercase text-gray-400'>bạn có thể thích</div>
+        <div className='mt-4 bg-white rounded-md p-3 leading-6'>
+          <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4'>
+            {productList?.data.data.products.map((product) => {
+              return (
+                <div className='' key={product._id}>
+                  <Product {...product} />
+                </div>
+              )
+            })}
+          </div>
+        </div>
       </div>
     </div>
   )

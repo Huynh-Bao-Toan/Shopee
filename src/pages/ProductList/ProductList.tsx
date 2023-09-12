@@ -13,7 +13,8 @@ function ProductList() {
   const { data } = useQuery({
     queryKey: ['productList', queryConfig],
     queryFn: () => getProductList(queryConfig as ProductListConfig),
-    keepPreviousData: true
+    keepPreviousData: true,
+    staleTime: 3 * 60 * 1000
   })
   const { data: categories } = useQuery({
     queryKey: ['categories'],
