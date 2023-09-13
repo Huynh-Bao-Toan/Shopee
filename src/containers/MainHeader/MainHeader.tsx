@@ -26,13 +26,13 @@ function MainHeader() {
   const { register, handleSubmit } = useForm<SearchSchema>({
     resolver: yupResolver(searchSchema)
   })
-
   const dispatch = useAppDispatch()
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
   const userInfo = useAppSelector((state) => state.auth.userInfo)
   const { data: purchasesInCartData } = useQuery({
     queryKey: ['purchases', { status: purchasesStatus.inCart }],
-    queryFn: () => getPurchases({ status: purchasesStatus.inCart })
+    queryFn: () => getPurchases({ status: purchasesStatus.inCart }),
+    enabled: isAuthenticated
   })
 
   const logoutMutation = useMutation({
@@ -186,9 +186,11 @@ function MainHeader() {
               placement='bottom-end'
             >
               <Link to='/' className='relative'>
-                <span className='bg-white text-sm text-orange w-5 h-5 text-center rounded-[50%] absolute -top-2 -right-2'>
-                  {purchasesInCartData?.data.data.length}
-                </span>
+                {isAuthenticated && (
+                  <span className='bg-white text-sm text-orange w-5 h-5 text-center rounded-[50%] absolute -top-2 -right-2'>
+                    {purchasesInCartData?.data.data.length}
+                  </span>
+                )}
                 <img src={icons.cart} alt='cart-icon' className='w-8 h-8' />
               </Link>
             </Popover>
