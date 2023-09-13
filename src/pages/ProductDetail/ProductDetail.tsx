@@ -180,7 +180,7 @@ function ProductDetail() {
             </div>
             <div className='flex items-center mt-8'>
               <span className='text-gray-500 text-sm mr-4'>Số Lượng</span>
-              <QuantityController quantity={quantity} max={product.quantity} setQuantity={setQuantity} />
+              <QuantityController max={product.quantity} min='1' quantity={quantity} setQuantity={setQuantity} />
               <span className='text-gray-500 text-sm mr-4'>{product.quantity} sản phẩm có sẵn</span>
             </div>
             <div className='flex items-center mt-8'>

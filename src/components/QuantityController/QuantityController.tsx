@@ -1,58 +1,94 @@
+import { useState } from 'react'
 import Button from '../Button/Button'
 import InputNumber, { InputNumberProps } from '../InputNumber'
 interface QuantityControllerProps extends InputNumberProps {
-  max: number
+  max?: number | string
+  min?: number | string
   classButton?: string
   classContainer?: string
-  // increaseFunction?: () => void
-  // decreaseFunction?: () => void
-  setQuantity: React.Dispatch<React.SetStateAction<number>>
-  quantity: number
+  classWrapper?: string
+  quantity?: number
+  setQuantity?: React.Dispatch<React.SetStateAction<number>>
 }
 function QuantityController(props: QuantityControllerProps) {
   const {
+    classWrapper,
+    setQuantity,
+    min = 1,
     classInput = 'bg-white text-sm text-center text-[#333] outline-none border-x border-x-solid border-gray-400 w-[32px] h-[32px]',
     quantity,
-    max,
+    max = 10,
     classButton = 'flex items-center justify-center  p-1 bg-white text-sm text-center text-[#333] outline-none  w-[32px] h-[32px]',
     classContainer = 'flex items-center mr-4 border border-solid border-gray-400 rounded-sm',
-    setQuantity,
     ...rest
   } = props
+  const [localQuantity, setLocalQuantity] = useState<number>(quantity || 1)
   const handleChangeQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (quantity < 1) {
-      setQuantity(1)
-    } else if (quantity > max) {
-      setQuantity(max)
-    } else setQuantity(Number(e.target.value))
+    if (setQuantity && quantity) {
+      if (quantity < Number(min)) {
+        setQuantity(Number(min))
+      } else if (quantity > Number(max)) {
+        setQuantity(Number(max))
+      } else setQuantity(Number(e.target.value))
+    } else {
+      if (localQuantity < Number(min)) {
+        setLocalQuantity(Number(min))
+      } else if (localQuantity > Number(max)) {
+        setLocalQuantity(Number(max))
+      } else setLocalQuantity(Number(e.target.value))
+    }
   }
   const handleBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (Number(e.target.value) < 1) {
-      setQuantity(1)
-    } else if (Number(e.target.value) > max) {
-      setQuantity(max)
+    if (setQuantity && quantity) {
+      if (Number(e.target.value) < Number(min)) {
+        setQuantity(Number(min))
+      } else if (Number(e.target.value) > Number(max)) {
+        setQuantity(Number(max))
+      }
+    } else {
+      if (Number(e.target.value) < Number(min)) {
+        setLocalQuantity(Number(min))
+      } else if (Number(e.target.value) > Number(max)) {
+        setLocalQuantity(Number(max))
+      }
     }
   }
   const handleIncrease = () => {
-    let quantityCurrent = quantity + 1
-    if (quantityCurrent > max) {
-      quantityCurrent = max
-    } else quantityCurrent += 1
-    setQuantity(quantityCurrent)
+    if (setQuantity && quantity) {
+      let quantityCurrent = quantity + 1
+      if (quantityCurrent > Number(max)) {
+        quantityCurrent = Number(max)
+      }
+      setQuantity(quantityCurrent)
+    } else {
+      let quantityCurrent = localQuantity + 1
+      if (quantityCurrent > Number(max)) {
+        quantityCurrent = Number(max)
+      }
+      setLocalQuantity(quantityCurrent)
+    }
   }
   const handleDecrease = () => {
-    let quantityCurrent = quantity - 1
-    if (quantityCurrent < 1) {
-      quantityCurrent = 1
-    } else quantityCurrent -= 1
-    setQuantity(quantityCurrent)
+    if (setQuantity && quantity) {
+      let quantityCurrent = quantity - 1
+      if (quantityCurrent < Number(min)) {
+        quantityCurrent = Number(min)
+      }
+      setQuantity(quantityCurrent)
+    } else {
+      let quantityCurrent = localQuantity - 1
+      if (quantityCurrent < Number(min)) {
+        quantityCurrent = Number(min)
+      }
+      setLocalQuantity(quantityCurrent)
+    }
   }
   return (
     <div className={classContainer}>
       <Button className={classButton} nameBtn='-' onClick={handleDecrease} />
       <InputNumber
-        value={quantity}
-        classWrapper=''
+        value={setQuantity ? quantity : localQuantity}
+        classWrapper={classWrapper ? classWrapper : ''}
         classInput={classInput}
         classError='hidden'
         {...rest}

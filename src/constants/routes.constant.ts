@@ -4,7 +4,8 @@ export enum PublicRoutesPath {
 }
 
 export enum PrivateRoutesPath {
-  profile = 'profile'
+  profile = 'profile',
+  cart = 'cart'
 }
 
 export type RoutesPathType<T> = {
@@ -17,5 +18,6 @@ export const publicRoutesPath: RoutesPathType<typeof PublicRoutesPath> = {
 }
 
 export const privateRoutesPath: RoutesPathType<typeof PrivateRoutesPath> = {
-  profile: '/profile'
+  profile: '/profile',
+  cart: '/cart'
 }

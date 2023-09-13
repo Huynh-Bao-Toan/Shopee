@@ -170,9 +170,12 @@ function MainHeader() {
                           ? `${purchasesInCartData?.data.data.length - MAX_PURCHASES_CART_HEADER} Thêm hàng vào giỏ`
                           : ''}{' '}
                       </div>
-                      <button className='rounded-sm py-2 px-3 capitalize bg-orange text-sm text-white border-none outline-none cursor-pointer'>
+                      <Link
+                        to={privateRoutesPath.cart}
+                        className='rounded-sm py-2 px-3 capitalize bg-orange text-sm text-white border-none outline-none cursor-pointer'
+                      >
                         xem giỏ hàng
-                      </button>
+                      </Link>
                     </div>
                   </Fragment>
                 ) : (
@@ -185,7 +188,7 @@ function MainHeader() {
               classNamePopOver='w-[400px] max-w-[400px] bg-white shadow-lg z-50 px-2 py-3 flex flex-col justify-start items-start rounded-sm'
               placement='bottom-end'
             >
-              <Link to='/' className='relative'>
+              <Link to={privateRoutesPath.cart} className='relative'>
                 {isAuthenticated && (
                   <span className='bg-white text-sm text-orange w-5 h-5 text-center rounded-[50%] absolute -top-2 -right-2'>
                     {purchasesInCartData?.data.data.length}
