@@ -1,5 +1,6 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import DOMPurify from 'dompurify'
+import { toast } from 'react-toastify'
 import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { getProductDetail, getProductList } from '~/apis/product.api'
@@ -10,8 +11,11 @@ import { formatNumberToSocial, formatPrice } from '~/utils/formatPrice'
 import { calculatorDiscountPercent, getIdFromNameId } from '~/utils/utils'
 import Product from '../ProductList/Product'
 import QuantityController from '~/components/QuantityController'
+import { addPurchases } from '~/apis/purchases.api'
+import { purchasesStatus } from '~/constants/purchases.constants'
 
 function ProductDetail() {
+  const queryClient = useQueryClient()
   const [activeImage, setActiveImage] = useState<string>()
   const [slideImages, setSlideImage] = useState<number[]>([0, 5])
   const [quantity, setQuantity] = useState<number>(1)
@@ -70,7 +74,21 @@ function ProductDetail() {
   const handleRemoveZoom = () => {
     imageRef.current?.removeAttribute('style')
   }
-
+  const addProduct = useMutation({
+    mutationFn: (body: { product_id: string; buy_count: number }) => addPurchases(body),
+    onSuccess: (data) => {
+      toast(data.data.message, {
+        autoClose: 1000
+      })
+      queryClient.invalidateQueries({ queryKey: ['purchases', { status: purchasesStatus.inCart }] })
+    }
+  })
+  const handleAddProductToCart = (product_id: string, buy_count: number) => {
+    addProduct.mutate({
+      product_id,
+      buy_count
+    })
+  }
   if (!product) return null
   return (
     <div className='max-w-7xl mx-auto py-10'>
@@ -182,7 +200,9 @@ function ProductDetail() {
                   />
                 </svg>
 
-                <span className='ml-1'>thêm vào giỏ hàng</span>
+                <span className='ml-1' onClick={() => handleAddProductToCart(product._id, quantity)}>
+                  thêm vào giỏ hàng
+                </span>
               </Button>
               <Button
                 nameBtn='mua ngay'

@@ -1,19 +1,24 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { omit } from 'lodash'
+import { Fragment } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 import { logoutAccount } from '~/apis/auth.api'
+import { getPurchases } from '~/apis/purchases.api'
 import { icons } from '~/assets/icons'
 import Button from '~/components/Button/Button'
 import Input from '~/components/Input'
 import Popover from '~/components/Popover'
+import { MAX_PURCHASES_CART_HEADER, purchasesStatus } from '~/constants/purchases.constants'
 import { privateRoutesPath, publicRoutesPath } from '~/constants/routes.constant'
 import { useAppDispatch } from '~/hooks/useAppDispatch'
 import { useAppSelector } from '~/hooks/useAppSelector'
 import useQueryConfig from '~/hooks/useQueryConfig'
 import { setIsAuthenticated, setUserInfo } from '~/redux/features/auth/authSlice'
+import { formatPrice } from '~/utils/formatPrice'
 import { SearchSchema, searchSchema } from '~/utils/rulesForm'
+import noProductImage from '~/assets/images/noProduct.png'
 
 function MainHeader() {
   const queryConfig = useQueryConfig()
@@ -25,6 +30,11 @@ function MainHeader() {
   const dispatch = useAppDispatch()
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
   const userInfo = useAppSelector((state) => state.auth.userInfo)
+  const { data: purchasesInCartData } = useQuery({
+    queryKey: ['purchases', { status: purchasesStatus.inCart }],
+    queryFn: () => getPurchases({ status: purchasesStatus.inCart })
+  })
+
   const logoutMutation = useMutation({
     mutationFn: () => {
       return logoutAccount()
@@ -46,7 +56,6 @@ function MainHeader() {
       search: createSearchParams(config).toString()
     })
   })
-  // console.log(watch())
   return (
     <header className='text-white bg-[linear-gradient(180deg,#f53d2d,#f63)] fixed top-0 left-0 right-0 bottom-0 z-50 max-h-32'>
       <div className='max-w-7xl mx-auto'>
@@ -134,51 +143,52 @@ function MainHeader() {
           <div className='col-span-1 justify-self-center'>
             <Popover
               renderPopOver={
-                <>
-                  <h3 className='text-gray-400 text-sm capitalize'>sản phẩm mới thêm</h3>
-                  <div className='mt-5'>
-                    <div className='mt-4 flex'>
-                      <img
-                        src='https://down-vn.img.susercontent.com/file/sg-11134201-23020-dpfbnsqk0qnv3b_tn'
-                        alt='product'
-                        className='w-10 h-10'
-                      />
-                      <div className='ml-5'>
-                        <div className='flex'>
-                          <div className='capitalize text-sm line-clamp-1 max-w-[240px] overflow-hidden text-ellipsis'>
-                            dép đi trong nhà chống trượt thoải mái họa tiết hoạt hình{' '}
+                purchasesInCartData?.data.data && purchasesInCartData?.data.data.length > 0 ? (
+                  <Fragment>
+                    <h3 className='text-gray-400 text-sm capitalize'>sản phẩm mới thêm</h3>
+                    <div className='mt-5'>
+                      {purchasesInCartData?.data.data.slice(0, MAX_PURCHASES_CART_HEADER).map((purchase, index) => {
+                        return (
+                          <div className='mt-2 flex hover:bg-gray-200 py-2' key={index}>
+                            <img src={purchase.product.image} alt={purchase.product.name} className='w-10 h-10' />
+                            <div className='ml-5'>
+                              <div className='flex'>
+                                <div className='capitalize text-sm line-clamp-1 max-w-[240px] overflow-hidden text-ellipsis'>
+                                  {purchase.product.name}{' '}
+                                </div>
+                                <div className='text-orange text-sm ml-10'>₫{formatPrice(purchase.product.price)}</div>
+                              </div>
+                            </div>
                           </div>
-                          <div className='text-orange text-sm ml-10'>₫59.000</div>
-                        </div>
-                      </div>
+                        )
+                      })}
                     </div>
-                    <div className='mt-4 flex'>
-                      <img
-                        src='https://down-vn.img.susercontent.com/file/sg-11134201-23020-dpfbnsqk0qnv3b_tn'
-                        alt='product'
-                        className='w-10 h-10'
-                      />
-                      <div className='ml-5'>
-                        <div className='flex'>
-                          <div className='capitalize text-sm line-clamp-1 max-w-[240px] overflow-hidden text-ellipsis'>
-                            dép đi trong nhà chống trượt thoải mái họa tiết hoạt hình{' '}
-                          </div>
-                          <div className='text-orange text-sm ml-10'>₫59.000</div>
-                        </div>
+                    <div className='mt-10  w-full flex justify-between items-center'>
+                      <div className='text-sm capitalize'>
+                        {' '}
+                        {purchasesInCartData?.data.data.length > MAX_PURCHASES_CART_HEADER
+                          ? `${purchasesInCartData?.data.data.length - MAX_PURCHASES_CART_HEADER} Thêm hàng vào giỏ`
+                          : ''}{' '}
                       </div>
+                      <button className='rounded-sm py-2 px-3 capitalize bg-orange text-sm text-white border-none outline-none cursor-pointer'>
+                        xem giỏ hàng
+                      </button>
                     </div>
+                  </Fragment>
+                ) : (
+                  <div className='flex items-center flex-col justify-center w-full h-[200px] '>
+                    <img src={noProductImage} alt='no-product' className='w-24 h-24' />
+                    <div className='capitalize mt-2 text-sm'>chưa có sản phẩm</div>
                   </div>
-                  <div className='mt-10  w-full'>
-                    <button className='rounded-sm float-right  py-2 px-3 capitalize bg-orange text-sm text-white border-none outline-none cursor-pointer'>
-                      xem giỏ hàng
-                    </button>
-                  </div>
-                </>
+                )
               }
               classNamePopOver='w-[400px] max-w-[400px] bg-white shadow-lg z-50 px-2 py-3 flex flex-col justify-start items-start rounded-sm'
               placement='bottom-end'
             >
-              <Link to='/'>
+              <Link to='/' className='relative'>
+                <span className='bg-white text-sm text-orange w-5 h-5 text-center rounded-[50%] absolute -top-2 -right-2'>
+                  {purchasesInCartData?.data.data.length}
+                </span>
                 <img src={icons.cart} alt='cart-icon' className='w-8 h-8' />
               </Link>
             </Popover>
