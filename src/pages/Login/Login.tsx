@@ -70,7 +70,7 @@ function Login() {
     <div className='bg-orange w-full'>
       <div
         className='max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-5 bg-contain bg-no-repeat bg-center min-h-[600px]'
-        style={{ backgroundImage: `${shopeeBg}` }}
+        style={{ backgroundImage: `url(${shopeeBg})` }}
       >
         <div className='lg:col-span-2 lg:col-start-4  '>
           <form
