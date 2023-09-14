@@ -19,7 +19,7 @@ import { setIsAuthenticated, setUserInfo } from '~/redux/features/auth/authSlice
 import { formatPrice } from '~/utils/formatPrice'
 import { SearchSchema, searchSchema } from '~/utils/rulesForm'
 import noProductImage from '~/assets/images/noProduct.png'
-
+import avatar from '~/assets/images/avatar.png'
 function MainHeader() {
   const queryConfig = useQueryConfig()
   const navigate = useNavigate()
@@ -95,7 +95,7 @@ function MainHeader() {
                 </>
               }
             >
-              <img src={'/src/assets/images/avatar.png'} alt='avatar' className='w-6 h-6 object-cover rounded-full' />
+              <img src={avatar} alt='avatar' className='w-6 h-6 object-cover rounded-full' />
               <span className='text-sm lowercase ml-2'>{userInfo?.email}</span>
             </Popover>
           ) : (

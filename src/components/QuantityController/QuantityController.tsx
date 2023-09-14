@@ -2,16 +2,18 @@ import { useState } from 'react'
 import Button from '../Button/Button'
 import InputNumber, { InputNumberProps } from '../InputNumber'
 interface QuantityControllerProps extends InputNumberProps {
+  isDisabled?: boolean
   max?: number | string
   min?: number | string
   classButton?: string
   classContainer?: string
   classWrapper?: string
   quantity?: number
-  setQuantity?: React.Dispatch<React.SetStateAction<number>>
+  setQuantity?: (quantity: number) => void
 }
 function QuantityController(props: QuantityControllerProps) {
   const {
+    isDisabled,
     classWrapper,
     setQuantity,
     min = 1,
@@ -85,8 +87,15 @@ function QuantityController(props: QuantityControllerProps) {
   }
   return (
     <div className={classContainer}>
-      <Button className={classButton} nameBtn='-' onClick={handleDecrease} />
+      <Button
+        className={classButton}
+        nameBtn='-'
+        onClick={handleDecrease}
+        disabled={isDisabled}
+        style={{ cursor: isDisabled ? 'not-allowed' : '' }}
+      />
       <InputNumber
+        style={{ cursor: isDisabled ? 'not-allowed' : '' }}
         value={setQuantity ? quantity : localQuantity}
         classWrapper={classWrapper ? classWrapper : ''}
         classInput={classInput}
@@ -94,8 +103,15 @@ function QuantityController(props: QuantityControllerProps) {
         {...rest}
         onChange={handleChangeQuantity}
         onBlur={handleBlur}
+        disabled={isDisabled}
       />
-      <Button className={classButton} nameBtn='+' onClick={handleIncrease} />
+      <Button
+        className={classButton}
+        nameBtn='+'
+        onClick={handleIncrease}
+        disabled={isDisabled}
+        style={{ cursor: isDisabled ? 'not-allowed' : '' }}
+      />
     </div>
   )
 }

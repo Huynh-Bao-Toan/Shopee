@@ -11,6 +11,7 @@ import { useAppDispatch } from '~/hooks/useAppDispatch'
 import { setIsAuthenticated, setUserInfo } from '~/redux/features/auth/authSlice'
 import { publicRoutesPath } from '~/constants/routes.constant'
 import Button from '~/components/Button/Button'
+import shopeeBg from '~/assets/images/sg-11134004-7rbk0-lkqed7pgsfw7b1.png'
 
 type Inputs = LoginSchema
 function Login() {
@@ -69,7 +70,7 @@ function Login() {
     <div className='bg-orange w-full'>
       <div
         className='max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-5 bg-contain bg-no-repeat bg-center min-h-[600px]'
-        style={{ backgroundImage: 'url(/src/assets/images/sg-11134004-7rbk0-lkqed7pgsfw7b1.png)' }}
+        style={{ backgroundImage: `${shopeeBg}` }}
       >
         <div className='lg:col-span-2 lg:col-start-4  '>
           <form
