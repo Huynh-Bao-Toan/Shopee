@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { getPurchases, updatePurchases } from '~/apis/purchases.api'
+import { buyProducts, deletePurchases, getPurchases, updatePurchases } from '~/apis/purchases.api'
 import Button from '~/components/Button/Button'
 import QuantityController from '~/components/QuantityController'
 import { purchasesStatus } from '~/constants/purchases.constants'
@@ -9,23 +9,43 @@ import { Purchase } from '~/types/purchases.type'
 import { formatPrice } from '~/utils/formatPrice'
 import { generateNameId } from '~/utils/utils'
 import { produce } from 'immer'
-import { keyBy } from 'lodash'
+import { compact, keyBy, sumBy } from 'lodash'
+import MessageModal from '~/components/MessageModal'
+import { toast } from 'react-toastify'
+import { AxiosError } from 'axios'
 interface ExtendedPurchase extends Purchase {
   checked: boolean
   disabled: boolean
 }
 function Cart() {
   const [extendedPurchases, setExtendedPurchases] = useState<ExtendedPurchase[]>([])
+  const [visibleModal, setVisibleModal] = useState<boolean>(false)
   const { data: purchasesInCartData, refetch: RefetchpurchasesInCartData } = useQuery({
     queryKey: ['purchases', { status: purchasesStatus.inCart }],
     queryFn: () => getPurchases({ status: purchasesStatus.inCart })
   })
-  const purchaseMutation = useMutation({
+
+  const updatePurchaseMutation = useMutation({
     mutationFn: (body: { product_id: string; buy_count: number }) => updatePurchases(body),
     onSuccess: () => {
       RefetchpurchasesInCartData()
     }
   })
+
+  const deletePurchaseMutation = useMutation({
+    mutationFn: (body: string[]) => deletePurchases(body),
+    onSuccess: () => {
+      RefetchpurchasesInCartData()
+    }
+  })
+
+  const buyPurchaseMutation = useMutation({
+    mutationFn: (body: { product_id: string; buy_count: number }[]) => buyProducts(body),
+    onSuccess: () => {
+      RefetchpurchasesInCartData()
+    }
+  })
+
   const purchasesInCart = purchasesInCartData?.data.data
   useEffect(() => {
     setExtendedPurchases((prev) => {
@@ -68,7 +88,45 @@ function Cart() {
         }
       })
     })
-    purchaseMutation.mutate({ product_id: id, buy_count: quantity })
+    updatePurchaseMutation.mutate({ product_id: id, buy_count: quantity })
+  }
+
+  const handleDeleteProduct = (id: string) => {
+    deletePurchaseMutation.mutate([id])
+  }
+  const handleMultipleDeleteProduct = () => {
+    const body = compact(
+      extendedPurchases.map((purchase) => {
+        if (purchase.checked) {
+          return purchase._id
+        }
+      })
+    )
+    deletePurchaseMutation.mutate(body, {
+      onSuccess: () => setVisibleModal(false)
+    })
+  }
+  const handleBuyProduct = () => {
+    const body = compact(
+      extendedPurchases.map((purchase) => {
+        if (purchase.checked) {
+          return { product_id: purchase.product._id, buy_count: purchase.buy_count }
+        }
+      })
+    )
+    buyPurchaseMutation.mutate(body, {
+      onSuccess: (data) =>
+        toast(data.data.message, {
+          autoClose: 1000
+        }),
+      onError: (error) => {
+        if (error instanceof AxiosError && error.response?.status === 422) {
+          toast.error('Chưa có sản phẩm nào được chọn', {
+            autoClose: 2000
+          })
+        }
+      }
+    })
   }
   return (
     <div className='bg-neutral-100 py-16'>
@@ -165,7 +223,12 @@ function Cart() {
                         <span className='text-orange'>₫{formatPrice(purchase.product.price * purchase.buy_count)}</span>
                       </div>
                       <div className='col-span-1'>
-                        <button className='bg-none text-black transition-colors hover:text-orange'>Xóa</button>
+                        <button
+                          className='bg-none text-black transition-colors hover:text-orange'
+                          onClick={() => handleDeleteProduct(purchase._id)}
+                        >
+                          Xóa
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -187,21 +250,122 @@ function Cart() {
             <button className='mx-3 border-none bg-none' onClick={handleCheckAll}>
               Chọn tất cả ({extendedPurchases.length})
             </button>
-            <button className='mx-3 border-none bg-none'>Xóa</button>
+            <button className='mx-3 border-none bg-none' onClick={() => setVisibleModal(!visibleModal)}>
+              Xóa
+            </button>
+            {extendedPurchases.some((purchase) => purchase.checked) ? (
+              <MessageModal
+                visible={visibleModal}
+                setVisible={setVisibleModal}
+                renderAction={
+                  <>
+                    <button
+                      data-modal-hide='popup-modal'
+                      type='button'
+                      className='uppercase text-white bg-orange hover:bg-orange/90  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2'
+                      onClick={() => setVisibleModal(false)}
+                    >
+                      trở lại
+                    </button>
+                    <button
+                      data-modal-hide='popup-modal'
+                      type='button'
+                      className='uppercase
+             text-gray-500 bg-white hover:bg-gray-100  rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 '
+                      onClick={handleMultipleDeleteProduct}
+                    >
+                      có
+                    </button>
+                  </>
+                }
+              >
+                <svg
+                  className='mx-auto mb-4 text-gray-400 w-12 h-12 '
+                  aria-hidden='true'
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 20 20'
+                >
+                  <path
+                    stroke='currentColor'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth={2}
+                    d='M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'
+                  />
+                </svg>
+                <h3 className='mb-5 text-lg font-normal text-gray-500 '>
+                  Bạn có muốn bỏ {extendedPurchases.filter((purchase) => purchase.checked).length} sản phẩm?
+                </h3>
+              </MessageModal>
+            ) : (
+              <MessageModal
+                visible={visibleModal}
+                setVisible={setVisibleModal}
+                renderAction={
+                  <>
+                    <button
+                      data-modal-hide='popup-modal'
+                      type='button'
+                      className='uppercase text-white bg-orange hover:bg-orange/90  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2'
+                      onClick={() => setVisibleModal(false)}
+                    >
+                      trở lại
+                    </button>
+                  </>
+                }
+              >
+                <svg
+                  className='mx-auto mb-4 text-gray-400 w-12 h-12 '
+                  aria-hidden='true'
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 20 20'
+                >
+                  <path
+                    stroke='currentColor'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth={2}
+                    d='M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'
+                  />
+                </svg>
+                <h3 className='mb-5 text-lg font-normal text-gray-500 '>Chưa có sản phẩm nào được chọn</h3>
+              </MessageModal>
+            )}
           </div>
 
           <div className='mt-5 flex flex-col sm:ml-auto sm:mt-0 sm:flex-row sm:items-center'>
             <div>
               <div className='flex items-center sm:justify-end'>
-                <div>Tổng thanh toán (0 sản phẩm):</div>
-                <div className='ml-2 text-2xl text-orange'>₫138000</div>
+                <div>Tổng thanh toán ({extendedPurchases.filter((purchase) => purchase.checked).length} sản phẩm):</div>
+                <div className='ml-2 text-2xl text-orange'>
+                  ₫
+                  {formatPrice(
+                    sumBy(
+                      extendedPurchases.filter((purchase) => purchase.checked),
+                      (purchase) => purchase.price * purchase.buy_count
+                    )
+                  )}
+                </div>
               </div>
               <div className='flex items-center text-sm sm:justify-end'>
                 <div className='text-gray-500'>Tiết kiệm</div>
-                <div className='ml-6 text-orange'>₫138000</div>
+                <div className='ml-6 text-orange'>
+                  ₫
+                  {formatPrice(
+                    sumBy(
+                      extendedPurchases.filter((purchase) => purchase.checked),
+                      (purchase) => (purchase.price_before_discount - purchase.price) * purchase.buy_count
+                    )
+                  )}
+                </div>
               </div>
             </div>
-            <Button className='mt-5 flex h-10 w-52 items-center justify-center bg-red-500 text-sm uppercase text-white hover:bg-red-600 sm:ml-4 sm:mt-0'>
+            <Button
+              className='mt-5 flex h-10 w-52 items-center justify-center bg-red-500 text-sm uppercase text-white hover:bg-red-600 sm:ml-4 sm:mt-0'
+              onClick={handleBuyProduct}
+            >
               Mua hàng
             </Button>
           </div>
