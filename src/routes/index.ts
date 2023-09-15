@@ -1,5 +1,6 @@
 import React from 'react'
 import { privateRoutesPath, publicRoutesPath } from '~/constants/routes.constant'
+import CartLayout from '~/layouts/CartLayout'
 import MainLayout from '~/layouts/MainLayout'
 import RegisterLayout from '~/layouts/RegisterLayout'
 import { Login, Register, Profile, Cart } from '~/pages'
@@ -18,5 +19,5 @@ export const publicRoutes: RoutesType[] = [
 
 export const privateRoutes: RoutesType[] = [
   { name: 'profile', path: privateRoutesPath.profile, component: Profile, layout: MainLayout },
-  { name: 'cart', path: privateRoutesPath.cart, component: Cart, layout: MainLayout }
+  { name: 'cart', path: privateRoutesPath.cart, component: Cart, layout: CartLayout }
 ]

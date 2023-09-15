@@ -13,6 +13,7 @@ import { compact, keyBy, sumBy } from 'lodash'
 import MessageModal from '~/components/MessageModal'
 import { toast } from 'react-toastify'
 import { AxiosError } from 'axios'
+import noProductImage from '~/assets/images/noProduct.png'
 interface ExtendedPurchase extends Purchase {
   checked: boolean
   disabled: boolean
@@ -129,7 +130,7 @@ function Cart() {
     })
   }
   return (
-    <div className='bg-neutral-100 py-16'>
+    <div className='bg-neutral-100 py-10'>
       <div className='max-w-7xl mx-auto'>
         <div className='overflow-auto'>
           <div className='min-w-[1000px]'>
@@ -157,83 +158,91 @@ function Cart() {
               </div>
             </div>
             <div className='my-3 rounded-sm bg-white p-5 shadow'>
-              {extendedPurchases?.map((purchase, index) => (
-                <div
-                  key={purchase._id}
-                  className='mb-5 grid grid-cols-12 rounded-sm border border-gray-200 bg-white py-5 px-4 text-center text-sm text-gray-500 first:mt-0'
-                >
-                  <div className='col-span-6'>
-                    <div className='flex'>
-                      <div className='flex flex-shrink-0 items-center justify-center pr-3'>
-                        <input
-                          type='checkbox'
-                          className='h-5 w-5 accent-orange'
-                          checked={purchase.checked}
-                          onChange={handleCheck(index)}
-                        />
-                      </div>
-                      <div className='flex-grow'>
-                        <div className='flex'>
-                          <Link
-                            className='h-20 w-20 flex-shrink-0'
-                            to={`/${generateNameId({
-                              name: purchase.product.name,
-                              id: purchase.product._id
-                            })}`}
-                          >
-                            <img alt={purchase.product.name} src={purchase.product.image} />
-                          </Link>
-                          <div className='flex-grow px-2 pt-1 pb-2'>
+              {extendedPurchases.length > 0 ? (
+                extendedPurchases?.map((purchase, index) => (
+                  <div
+                    key={purchase._id}
+                    className='mb-5 grid grid-cols-12 rounded-sm border border-gray-200 bg-white py-5 px-4 text-center text-sm text-gray-500 first:mt-0'
+                  >
+                    <div className='col-span-6'>
+                      <div className='flex'>
+                        <div className='flex flex-shrink-0 items-center justify-center pr-3'>
+                          <input
+                            type='checkbox'
+                            className='h-5 w-5 accent-orange'
+                            checked={purchase.checked}
+                            onChange={handleCheck(index)}
+                          />
+                        </div>
+                        <div className='flex-grow'>
+                          <div className='flex'>
                             <Link
+                              className='h-20 w-20 flex-shrink-0'
                               to={`/${generateNameId({
                                 name: purchase.product.name,
                                 id: purchase.product._id
                               })}`}
-                              className='line-clamp-2'
                             >
-                              {purchase.product.name}
+                              <img alt={purchase.product.name} src={purchase.product.image} />
                             </Link>
+                            <div className='flex-grow px-2 pt-1 pb-2'>
+                              <Link
+                                to={`/${generateNameId({
+                                  name: purchase.product.name,
+                                  id: purchase.product._id
+                                })}`}
+                                className='line-clamp-2 text-left'
+                              >
+                                {purchase.product.name}
+                              </Link>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div className='col-span-6'>
-                    <div className='grid grid-cols-5 items-center'>
-                      <div className='col-span-2'>
-                        <div className='flex items-center justify-center'>
-                          <span className='text-gray-300 line-through'>
-                            ₫{formatPrice(purchase.product.price_before_discount)}
-                          </span>
-                          <span className='ml-3'>₫{formatPrice(purchase.product.price)}</span>
+                    <div className='col-span-6'>
+                      <div className='grid grid-cols-5 items-center'>
+                        <div className='col-span-2'>
+                          <div className='flex items-center justify-center'>
+                            <span className='text-gray-300 line-through'>
+                              ₫{formatPrice(purchase.product.price_before_discount)}
+                            </span>
+                            <span className='ml-3'>₫{formatPrice(purchase.product.price)}</span>
+                          </div>
                         </div>
-                      </div>
-                      <div className='col-span-1'>
-                        <QuantityController
-                          isDisabled={purchase.disabled}
-                          max={purchase.product.quantity}
-                          classWrapper=' w-[50px]'
-                          classInput='bg-white text-sm text-center text-[#333] outline-none border-x border-x-solid border-gray-400 w-full h-[32px]'
-                          setQuantity={handleUpdateQuantity(purchase.product._id)}
-                          quantity={purchase.buy_count}
-                          classContainer='flex items-center ml-4 border border-solid border-gray-400 rounded-sm'
-                        />
-                      </div>
-                      <div className='col-span-1'>
-                        <span className='text-orange'>₫{formatPrice(purchase.product.price * purchase.buy_count)}</span>
-                      </div>
-                      <div className='col-span-1'>
-                        <button
-                          className='bg-none text-black transition-colors hover:text-orange'
-                          onClick={() => handleDeleteProduct(purchase._id)}
-                        >
-                          Xóa
-                        </button>
+                        <div className='col-span-1'>
+                          <QuantityController
+                            isDisabled={purchase.disabled}
+                            max={purchase.product.quantity}
+                            classWrapper=' w-[50px]'
+                            classInput='bg-white text-sm text-center text-[#333] outline-none border-x border-x-solid border-gray-400 w-full h-[32px]'
+                            setQuantity={handleUpdateQuantity(purchase.product._id)}
+                            quantity={purchase.buy_count}
+                            classContainer='flex items-center ml-4 border border-solid border-gray-400 rounded-sm'
+                          />
+                        </div>
+                        <div className='col-span-1'>
+                          <span className='text-orange'>
+                            ₫{formatPrice(purchase.product.price * purchase.buy_count)}
+                          </span>
+                        </div>
+                        <div className='col-span-1'>
+                          <button
+                            className='bg-none text-black transition-colors hover:text-orange'
+                            onClick={() => handleDeleteProduct(purchase._id)}
+                          >
+                            Xóa
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
+                ))
+              ) : (
+                <div className='w-full flex justify-center'>
+                  <img src={noProductImage} alt='no-product' />
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </div>
