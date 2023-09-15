@@ -13,8 +13,11 @@ import Product from '../ProductList/Product'
 import QuantityController from '~/components/QuantityController'
 import { addPurchases } from '~/apis/purchases.api'
 import { purchasesStatus } from '~/constants/purchases.constants'
+import { useAppDispatch } from '~/hooks/useAppDispatch'
+import { setProductListBuyNow } from '~/redux/features/cart/cartSlice'
 
 function ProductDetail() {
+  const dispatch = useAppDispatch()
   const queryClient = useQueryClient()
   const [activeImage, setActiveImage] = useState<string>()
   const [slideImages, setSlideImage] = useState<number[]>([0, 5])
@@ -88,6 +91,19 @@ function ProductDetail() {
       product_id,
       buy_count
     })
+  }
+  const handleBuyNow = (product_id: string, buy_count: number) => {
+    addProduct.mutate(
+      {
+        product_id,
+        buy_count
+      },
+      {
+        onSuccess: (data) => {
+          dispatch(setProductListBuyNow(data.data.data._id))
+        }
+      }
+    )
   }
   if (!product) return null
   return (
@@ -205,6 +221,7 @@ function ProductDetail() {
                 </span>
               </Button>
               <Button
+                onClick={() => handleBuyNow(product._id, quantity)}
                 nameBtn='mua ngay'
                 className='mr-3 mt-2 capitalize rounded-sm p-2 bg-orange text-sm text-center text-white outline-none border-none w-[180px] h-[50px]'
               />

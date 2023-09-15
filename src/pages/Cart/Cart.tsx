@@ -5,21 +5,27 @@ import { buyProducts, deletePurchases, getPurchases, updatePurchases } from '~/a
 import Button from '~/components/Button/Button'
 import QuantityController from '~/components/QuantityController'
 import { purchasesStatus } from '~/constants/purchases.constants'
-import { Purchase } from '~/types/purchases.type'
 import { formatPrice } from '~/utils/formatPrice'
 import { generateNameId } from '~/utils/utils'
-import { produce } from 'immer'
-import { compact, keyBy, sumBy } from 'lodash'
+import { compact, sumBy } from 'lodash'
 import MessageModal from '~/components/MessageModal'
 import { toast } from 'react-toastify'
 import { AxiosError } from 'axios'
 import noProductImage from '~/assets/images/noProduct.png'
-interface ExtendedPurchase extends Purchase {
-  checked: boolean
-  disabled: boolean
-}
+import { useAppSelector } from '~/hooks/useAppSelector'
+import {
+  checkAllProduct,
+  checkProduct,
+  removeAllProductListBuyNow,
+  setExtendedPurchases,
+  updateProduct
+} from '~/redux/features/cart/cartSlice'
+import { useAppDispatch } from '~/hooks/useAppDispatch'
+
 function Cart() {
-  const [extendedPurchases, setExtendedPurchases] = useState<ExtendedPurchase[]>([])
+  const dispatch = useAppDispatch()
+  const extendedPurchases = useAppSelector((state) => state.cart.extendedPurchases)
+  const isCheckedAll = extendedPurchases.every((purchase) => purchase.checked === true)
   const [visibleModal, setVisibleModal] = useState<boolean>(false)
   const { data: purchasesInCartData, refetch: RefetchpurchasesInCartData } = useQuery({
     queryKey: ['purchases', { status: purchasesStatus.inCart }],
@@ -49,48 +55,23 @@ function Cart() {
 
   const purchasesInCart = purchasesInCartData?.data.data
   useEffect(() => {
-    setExtendedPurchases((prev) => {
-      const extendedPurchasesObject = keyBy(prev, '_id')
-      return (
-        purchasesInCart?.map((purchase) => {
-          return {
-            ...purchase,
-            checked: Boolean(extendedPurchasesObject[purchase._id]?.checked),
-            disabled: false
-          }
-        }) || []
-      )
-    })
+    if (purchasesInCart) {
+      dispatch(setExtendedPurchases({ purchasesInCart }))
+    }
+    return () => {
+      dispatch(removeAllProductListBuyNow())
+    }
   }, [purchasesInCart])
-  const isCheckedAll =
-    extendedPurchases.length > 0 ? extendedPurchases.every((purchase) => purchase.checked === true) : false
 
   const handleCheck = (index: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    setExtendedPurchases((prev) => {
-      return produce(prev, (draftState) => {
-        draftState[index].checked = e.target.checked
-      })
-    })
+    dispatch(checkProduct({ index, checkedValue: e.target.checked }))
   }
+
   const handleCheckAll = () => {
-    setExtendedPurchases((prev) =>
-      prev.map((purchase) => ({
-        ...purchase,
-        checked: !isCheckedAll
-      }))
-    )
+    dispatch(checkAllProduct(isCheckedAll))
   }
   const handleUpdateQuantity = (id: string) => (quantity: number) => {
-    setExtendedPurchases((prev) => {
-      return prev.map((purchase) => {
-        const isPurchase = purchase.product._id === id
-        return {
-          ...purchase,
-          buy_count: isPurchase ? quantity : purchase.buy_count,
-          disabled: true
-        }
-      })
-    })
+    dispatch(updateProduct({ id, quantity }))
     updatePurchaseMutation.mutate({ product_id: id, buy_count: quantity })
   }
 
@@ -131,6 +112,7 @@ function Cart() {
       }
     })
   }
+
   return (
     <div className='bg-neutral-100 py-10'>
       <div className='max-w-7xl mx-auto'>
@@ -142,10 +124,12 @@ function Cart() {
                   <div className='flex flex-shrink-0 items-center justify-center pr-3'>
                     <input
                       type='checkbox'
-                      className={`h-5 w-5 accent-orange ${extendedPurchases.length > 0 ? '' : 'cursor-not-allowed'}`}
+                      className={`h-5 w-5 accent-orange ${
+                        extendedPurchases && extendedPurchases.length > 0 ? '' : 'cursor-not-allowed'
+                      }`}
                       checked={isCheckedAll}
                       onChange={handleCheckAll}
-                      disabled={extendedPurchases.length > 0 ? false : true}
+                      disabled={extendedPurchases && extendedPurchases.length > 0 ? false : true}
                     />
                   </div>
                   <div className='flex-grow text-black'>Sản phẩm</div>
@@ -161,7 +145,7 @@ function Cart() {
               </div>
             </div>
             <div className='my-3 rounded-sm bg-white p-5 shadow'>
-              {extendedPurchases.length > 0 ? (
+              {extendedPurchases && extendedPurchases.length > 0 ? (
                 extendedPurchases?.map((purchase, index) => (
                   <div
                     key={purchase._id}
@@ -254,19 +238,21 @@ function Cart() {
             <div className='flex flex-shrink-0 items-center justify-center pr-3'>
               <input
                 type='checkbox'
-                className={`h-5 w-5 accent-orange ${extendedPurchases.length > 0 ? '' : 'cursor-not-allowed'} `}
+                className={`h-5 w-5 accent-orange ${
+                  extendedPurchases && extendedPurchases.length > 0 ? '' : 'cursor-not-allowed'
+                } `}
                 checked={isCheckedAll}
                 onChange={handleCheckAll}
-                disabled={extendedPurchases.length > 0 ? false : true}
+                disabled={extendedPurchases && extendedPurchases.length > 0 ? false : true}
               />
             </div>
             <button className='mx-3 border-none bg-none' onClick={handleCheckAll}>
-              Chọn tất cả ({extendedPurchases.length})
+              Chọn tất cả ({extendedPurchases && extendedPurchases.length})
             </button>
             <button className='mx-3 border-none bg-none' onClick={() => setVisibleModal(!visibleModal)}>
               Xóa
             </button>
-            {extendedPurchases.some((purchase) => purchase.checked) ? (
+            {extendedPurchases && extendedPurchases.some((purchase) => purchase.checked) ? (
               <MessageModal
                 visible={visibleModal}
                 setVisible={setVisibleModal}
@@ -308,7 +294,8 @@ function Cart() {
                   />
                 </svg>
                 <h3 className='mb-5 text-lg font-normal text-gray-500 '>
-                  Bạn có muốn bỏ {extendedPurchases.filter((purchase) => purchase.checked).length} sản phẩm?
+                  Bạn có muốn bỏ {extendedPurchases && extendedPurchases.filter((purchase) => purchase.checked).length}{' '}
+                  sản phẩm?
                 </h3>
               </MessageModal>
             ) : (
@@ -351,12 +338,15 @@ function Cart() {
           <div className='mt-5 flex flex-col sm:ml-auto sm:mt-0 sm:flex-row sm:items-center'>
             <div>
               <div className='flex items-center sm:justify-end'>
-                <div>Tổng thanh toán ({extendedPurchases.filter((purchase) => purchase.checked).length} sản phẩm):</div>
+                <div>
+                  Tổng thanh toán (
+                  {extendedPurchases && extendedPurchases.filter((purchase) => purchase.checked).length} sản phẩm):
+                </div>
                 <div className='ml-2 text-2xl text-orange'>
                   ₫
                   {formatPrice(
                     sumBy(
-                      extendedPurchases.filter((purchase) => purchase.checked),
+                      extendedPurchases && extendedPurchases.filter((purchase) => purchase.checked),
                       (purchase) => purchase.price * purchase.buy_count
                     )
                   )}
@@ -368,7 +358,7 @@ function Cart() {
                   ₫
                   {formatPrice(
                     sumBy(
-                      extendedPurchases.filter((purchase) => purchase.checked),
+                      extendedPurchases && extendedPurchases.filter((purchase) => purchase.checked),
                       (purchase) => (purchase.price_before_discount - purchase.price) * purchase.buy_count
                     )
                   )}

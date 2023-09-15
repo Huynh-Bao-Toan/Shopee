@@ -101,11 +101,11 @@ function MainHeader() {
               placement='bottom-end'
             >
               <Link to={privateRoutesPath.cart} className='relative'>
-                {isAuthenticated && (
+                {isAuthenticated && purchasesInCartData && purchasesInCartData.data.data.length > 0 ? (
                   <span className='bg-white text-sm text-orange w-5 h-5 text-center rounded-[50%] absolute -top-2 -right-2'>
                     {purchasesInCartData?.data.data.length}
                   </span>
-                )}
+                ) : null}
                 <img src={icons.cart} alt='cart-icon' className='w-8 h-8' />
               </Link>
             </Popover>
