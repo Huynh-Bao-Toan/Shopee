@@ -62,7 +62,9 @@ function Cart() {
       )
     })
   }, [purchasesInCart])
-  const isCheckedAll = extendedPurchases.every((purchase) => purchase.checked === true)
+  const isCheckedAll =
+    extendedPurchases.length > 0 ? extendedPurchases.every((purchase) => purchase.checked === true) : false
+
   const handleCheck = (index: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setExtendedPurchases((prev) => {
       return produce(prev, (draftState) => {
@@ -140,9 +142,10 @@ function Cart() {
                   <div className='flex flex-shrink-0 items-center justify-center pr-3'>
                     <input
                       type='checkbox'
-                      className='h-5 w-5 accent-orange'
+                      className={`h-5 w-5 accent-orange ${extendedPurchases.length > 0 ? '' : 'cursor-not-allowed'}`}
                       checked={isCheckedAll}
                       onChange={handleCheckAll}
+                      disabled={extendedPurchases.length > 0 ? false : true}
                     />
                   </div>
                   <div className='flex-grow text-black'>Sản phẩm</div>
@@ -251,9 +254,10 @@ function Cart() {
             <div className='flex flex-shrink-0 items-center justify-center pr-3'>
               <input
                 type='checkbox'
-                className='h-5 w-5 accent-orange'
+                className={`h-5 w-5 accent-orange ${extendedPurchases.length > 0 ? '' : 'cursor-not-allowed'} `}
                 checked={isCheckedAll}
                 onChange={handleCheckAll}
+                disabled={extendedPurchases.length > 0 ? false : true}
               />
             </div>
             <button className='mx-3 border-none bg-none' onClick={handleCheckAll}>
