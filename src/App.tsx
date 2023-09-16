@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { privateRoutes, publicRoutes } from './routes'
-import { Fragment } from 'react'
+import { Fragment, useEffect } from 'react'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import MainLayout from './layouts/MainLayout'
@@ -8,9 +8,23 @@ import { ProductList } from './pages'
 import { PrivateRoutesPath, PublicRoutesPath, privateRoutesPath, publicRoutesPath } from './constants/routes.constant'
 import { useAppSelector } from './hooks/useAppSelector'
 import ProductDetail from './pages/ProductDetail'
+import { LocalStorageEventTarget } from './utils/auth'
+import { useAppDispatch } from './hooks/useAppDispatch'
+import { resetAuth } from './redux/features/auth/authSlice'
 
 function App() {
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
+  const dispatch = useAppDispatch()
+  useEffect(() => {
+    LocalStorageEventTarget.addEventListener('clearLS', () => {
+      dispatch(resetAuth())
+    })
+    return () => {
+      LocalStorageEventTarget.removeEventListener('clearLS', () => {
+        dispatch(resetAuth())
+      })
+    }
+  }, [resetAuth])
   return (
     <>
       <Routes>

@@ -54,6 +54,9 @@ export const cartSlice = createSlice({
         }
       })
     }
+    // resetCart : (state) => {
+    //   state.extendedPurchases = undefined
+    // }
   }
 })
 
