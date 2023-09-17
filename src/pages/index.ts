@@ -1,5 +1,7 @@
 export { default as Login } from './Login'
 export { default as Register } from './Register'
 export { default as ProductList } from './ProductList'
-export { default as Profile } from './Profile'
+export { default as Profile } from './User/pages/Profile'
+export { default as ChangePassword } from './User/pages/ChangePassword'
+export { default as HistoryPurchase } from './User/pages/HistoryPurchase'
 export { default as Cart } from './Cart'

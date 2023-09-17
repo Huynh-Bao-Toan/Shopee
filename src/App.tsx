@@ -48,13 +48,16 @@ function App() {
           ? publicRoutes.map((route, index) => {
               const Page = route.component
               const Layout = route.layout ? route.layout : Fragment
+              const ChildrenLayout = route.childrenLayout ? route.childrenLayout : Fragment
               return (
                 <Route
                   path={route.path}
                   key={index}
                   element={
                     <Layout>
-                      <Page />
+                      <ChildrenLayout>
+                        <Page />
+                      </ChildrenLayout>
                     </Layout>
                   }
                 />
@@ -63,13 +66,16 @@ function App() {
           : privateRoutes.map((route, index) => {
               const Page = route.component
               const Layout = route.layout ? route.layout : Fragment
+              const ChildrenLayout = route.childrenLayout ? route.childrenLayout : Fragment
               return (
                 <Route
                   path={route.path}
                   key={index}
                   element={
                     <Layout>
-                      <Page />
+                      <ChildrenLayout>
+                        <Page />
+                      </ChildrenLayout>
                     </Layout>
                   }
                 />
