@@ -62,7 +62,11 @@ function NavbarHeader() {
             </>
           }
         >
-          <img src={avatar} alt='avatar' className='w-6 h-6 object-cover rounded-full' />
+          <img
+            src={userInfo?.avatar ? userInfo?.avatar : avatar}
+            alt='avatar'
+            className='w-6 h-6 object-cover rounded-full'
+          />
           <span className='text-sm lowercase ml-2'>{userInfo?.email}</span>
         </Popover>
       ) : (
