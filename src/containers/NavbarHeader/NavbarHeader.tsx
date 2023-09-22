@@ -5,10 +5,10 @@ import Button from '~/components/Button/Button'
 import Popover from '~/components/Popover'
 import { privateRoutesPath, publicRoutesPath } from '~/constants/routes.constant'
 import { useAppSelector } from '~/hooks/useAppSelector'
-import avatar from '~/assets/images/avatar.png'
 import { useAppDispatch } from '~/hooks/useAppDispatch'
 import { setIsAuthenticated, setUserInfo } from '~/redux/features/auth/authSlice'
 import { logoutAccount } from '~/apis/auth.api'
+import { getAvatarUrl } from '~/utils/utils'
 
 function NavbarHeader() {
   const dispatch = useAppDispatch()
@@ -62,11 +62,7 @@ function NavbarHeader() {
             </>
           }
         >
-          <img
-            src={userInfo?.avatar ? userInfo?.avatar : avatar}
-            alt='avatar'
-            className='w-6 h-6 object-cover rounded-full'
-          />
+          <img src={getAvatarUrl(userInfo?.avatar)} alt='avatar' className='w-6 h-6 object-cover rounded-full' />
           <span className='text-sm lowercase ml-2'>{userInfo?.email}</span>
         </Popover>
       ) : (

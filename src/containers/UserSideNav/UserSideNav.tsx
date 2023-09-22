@@ -1,14 +1,14 @@
 import classNames from 'classnames'
 import { Link, NavLink } from 'react-router-dom'
-import Avatar from '~/assets/images/avatar.png'
 import { useAppSelector } from '~/hooks/useAppSelector'
+import { getAvatarUrl } from '~/utils/utils'
 function UserSideNav() {
   const profile = useAppSelector((state) => state.auth.userInfo)
   return (
     <div>
       <div className='flex items-center border-b border-b-gray-200 py-4'>
         <Link to={'/'} className='h-12 w-12 flex-shrink-0 overflow-hidden rounded-full border border-black/10'>
-          <img src={profile?.avatar ? profile?.avatar : Avatar} alt='avatar' className='h-full w-full object-cover' />
+          <img src={getAvatarUrl(profile?.avatar)} alt='avatar' className='h-full w-full object-cover' />
         </Link>
         <div className='flex-grow pl-4'>
           <div className='mb-1 truncate font-semibold text-gray-600'>{profile?.email}</div>

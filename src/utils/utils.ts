@@ -1,3 +1,4 @@
+import Avatar from '~/assets/images/avatar.png'
 export const calculatorDiscountPercent = (price: number, priceBeforeDiscount: number) => {
   return Math.round(((priceBeforeDiscount - price) * 100) / priceBeforeDiscount) + '%'
 }
@@ -13,3 +14,5 @@ export const getIdFromNameId = (nameId: string) => {
   const arr = nameId.split('-i-')
   return arr[arr.length - 1]
 }
+export const getAvatarUrl = (avatarName?: string) =>
+  avatarName ? `https://api-ecom.duthanhduoc.com/images/${avatarName}` : Avatar
