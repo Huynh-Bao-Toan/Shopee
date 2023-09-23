@@ -80,7 +80,7 @@ function ProductDetail() {
   const addProduct = useMutation({
     mutationFn: (body: { product_id: string; buy_count: number }) => addPurchases(body),
     onSuccess: (data) => {
-      toast(data.data.message, {
+      toast.success(data.data.message, {
         autoClose: 1000
       })
       queryClient.invalidateQueries({ queryKey: ['purchases', { status: purchasesStatus.inCart }] })
