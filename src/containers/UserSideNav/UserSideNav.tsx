@@ -1,5 +1,6 @@
 import classNames from 'classnames'
 import { Link, NavLink } from 'react-router-dom'
+import { privateRoutesPath } from '~/constants/routes.constant'
 import { useAppSelector } from '~/hooks/useAppSelector'
 import { getAvatarUrl } from '~/utils/utils'
 function UserSideNav() {
@@ -7,12 +8,12 @@ function UserSideNav() {
   return (
     <div>
       <div className='flex items-center border-b border-b-gray-200 py-4'>
-        <Link to={'/'} className='h-12 w-12 flex-shrink-0 overflow-hidden rounded-full border border-black/10'>
+        <Link to={privateRoutesPath.profile} className='h-12 w-12 flex-shrink-0 overflow-hidden rounded-full border border-black/10'>
           <img src={getAvatarUrl(profile?.avatar)} alt='avatar' className='h-full w-full object-cover' />
         </Link>
         <div className='flex-grow pl-4'>
           <div className='mb-1 truncate font-semibold text-gray-600'>{profile?.email}</div>
-          <Link to={'/'} className='flex items-center capitalize text-gray-500'>
+          <Link to={privateRoutesPath.profile} className='flex items-center capitalize text-gray-500'>
             <svg
               width={12}
               height={12}
@@ -32,7 +33,7 @@ function UserSideNav() {
       </div>
       <div className='mt-7'>
         <NavLink
-          to=''
+          to={privateRoutesPath.profile}
           className={({ isActive }) =>
             classNames('flex items-center capitalize  transition-colors', {
               'text-orange': isActive,
@@ -46,7 +47,7 @@ function UserSideNav() {
           Tài khoản của tôi
         </NavLink>
         <NavLink
-          to='/'
+          to={privateRoutesPath.changePassword}
           className={({ isActive }) =>
             classNames('mt-4 flex items-center capitalize transition-colors', {
               'text-orange': isActive,
@@ -60,7 +61,7 @@ function UserSideNav() {
           Đổi mật khẩu
         </NavLink>
         <NavLink
-          to='/'
+          to={privateRoutesPath.historyPurchase}
           className={({ isActive }) =>
             classNames('mt-4 flex items-center  capitalize transition-colors', {
               'text-orange': isActive,
