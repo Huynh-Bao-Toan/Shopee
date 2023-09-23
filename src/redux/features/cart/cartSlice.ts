@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
-import { keyBy } from 'lodash'
+import keyBy from 'lodash/keyBy'
 import { ExtendedPurchase, Purchase } from '~/types/purchases.type'
 
 // Define a type for the slice state
@@ -54,9 +54,6 @@ export const cartSlice = createSlice({
         }
       })
     }
-    // resetCart : (state) => {
-    //   state.extendedPurchases = undefined
-    // }
   }
 })
 

@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { omit } from 'lodash'
+import omit from 'lodash/omit'
 import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 import { icons } from '~/assets/icons'
 import { order as orderConstant, sortBy } from '~/constants/product.constants'

@@ -1,4 +1,6 @@
-import { range } from 'lodash'
+// lodash không có tree-shaking
+// import  {range}  from 'lodash'
+import range from 'lodash/range'
 import { useEffect, useState } from 'react'
 
 interface DateSelectProps {
