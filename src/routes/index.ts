@@ -1,11 +1,16 @@
-import React from 'react'
+import React, { lazy } from 'react'
 import { privateRoutesPath, publicRoutesPath } from '~/constants/routes.constant'
 import CartLayout from '~/layouts/CartLayout'
 import MainLayout from '~/layouts/MainLayout'
 import RegisterLayout from '~/layouts/RegisterLayout'
-import { Login, Register, Profile, Cart, ChangePassword, HistoryPurchase } from '~/pages'
+// import {  Login,Register, Profile, Cart, ChangePassword, HistoryPurchase } from '~/pages'
 import UserLayout from '~/pages/User/layouts/UserLayout/UserLayout'
-
+const Login = lazy(() => import('../pages/Login'))
+const Register = lazy(() => import('../pages/Register'))
+const Profile = lazy(() => import('../pages/User/pages/Profile'))
+const Cart = lazy(() => import('../pages/Cart'))
+const ChangePassword = lazy(() => import('../pages/User/pages/ChangePassword'))
+const HistoryPurchase = lazy(() => import('../pages/User/pages/HistoryPurchase'))
 interface RoutesType {
   name: string
   path: string
@@ -22,7 +27,13 @@ export const publicRoutes: RoutesType[] = [
     layout: RegisterLayout,
     childrenLayout: null
   },
-  { name: 'login', path: publicRoutesPath.login, component: Login, layout: RegisterLayout, childrenLayout: null }
+  {
+    name: 'login',
+    path: publicRoutesPath.login,
+    component: Login,
+    layout: RegisterLayout,
+    childrenLayout: null
+  }
 ]
 
 export const privateRoutes: RoutesType[] = [
@@ -33,7 +44,13 @@ export const privateRoutes: RoutesType[] = [
     layout: MainLayout,
     childrenLayout: UserLayout
   },
-  { name: 'cart', path: privateRoutesPath.cart, component: Cart, layout: CartLayout, childrenLayout: null },
+  {
+    name: 'cart',
+    path: privateRoutesPath.cart,
+    component: Cart,
+    layout: CartLayout,
+    childrenLayout: null
+  },
   {
     name: 'history-purchase',
     path: privateRoutesPath.historyPurchase,

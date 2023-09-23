@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { privateRoutes, publicRoutes } from './routes'
-import { Fragment, useEffect } from 'react'
+import { Fragment, useEffect, Suspense } from 'react'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import MainLayout from './layouts/MainLayout'
@@ -58,6 +58,7 @@ function App() {
               const Page = route.component
               const Layout = route.layout ? route.layout : Fragment
               const ChildrenLayout = route.childrenLayout ? route.childrenLayout : Fragment
+
               return (
                 <Route
                   path={route.path}
@@ -65,7 +66,9 @@ function App() {
                   element={
                     <Layout>
                       <ChildrenLayout>
-                        <Page />
+                        <Suspense>
+                          <Page />
+                        </Suspense>
                       </ChildrenLayout>
                     </Layout>
                   }
@@ -76,6 +79,7 @@ function App() {
               const Page = route.component
               const Layout = route.layout ? route.layout : Fragment
               const ChildrenLayout = route.childrenLayout ? route.childrenLayout : Fragment
+
               return (
                 <Route
                   path={route.path}
@@ -83,7 +87,9 @@ function App() {
                   element={
                     <Layout>
                       <ChildrenLayout>
-                        <Page />
+                        <Suspense>
+                          <Page />
+                        </Suspense>
                       </ChildrenLayout>
                     </Layout>
                   }
