@@ -11,6 +11,7 @@ import ProductDetail from './pages/ProductDetail'
 import { LocalStorageEventTarget } from './utils/auth'
 import { useAppDispatch } from './hooks/useAppDispatch'
 import { resetAuth } from './redux/features/auth/authSlice'
+import NotFound from './pages/NotFound'
 
 function App() {
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
@@ -36,6 +37,14 @@ function App() {
             </MainLayout>
           }
         />
+        <Route
+          path='*'
+          element={
+            <MainLayout>
+              <NotFound />
+            </MainLayout>
+          }
+        ></Route>
         <Route
           path=':nameId'
           element={

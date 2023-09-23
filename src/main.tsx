@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { store } from './redux/store'
 import { Provider } from 'react-redux'
+import ErrorBoundary from './components/ErrorBoundary'
 // Create a client
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -20,7 +21,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
-          <App />
+          <ErrorBoundary>
+            <App />
+          </ErrorBoundary>
           {/* The rest of your application */}
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>

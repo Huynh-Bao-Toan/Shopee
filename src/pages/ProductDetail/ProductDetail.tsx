@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import DOMPurify from 'dompurify'
 import { toast } from 'react-toastify'
 import { useState, useEffect, useRef } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { getProductDetail, getProductList } from '~/apis/product.api'
 import Button from '~/components/Button/Button'
 import ProductRating from '~/components/ProductRating'
@@ -18,6 +18,7 @@ import { setProductListBuyNow } from '~/redux/features/cart/cartSlice'
 
 function ProductDetail() {
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [activeImage, setActiveImage] = useState<string>()
   const [slideImages, setSlideImage] = useState<number[]>([0, 5])
@@ -25,16 +26,22 @@ function ProductDetail() {
   const imageRef = useRef<HTMLImageElement>(null)
   const { nameId } = useParams()
   const id = getIdFromNameId(nameId as string)
-  const { data } = useQuery({
+  const { data, error } = useQuery({
     queryKey: ['product', id],
     queryFn: () => getProductDetail(id as string)
   })
+
   const product = data?.data.data
   useEffect(() => {
     if (product && product.images.length > 0) {
       setActiveImage(product.images[0])
     }
   }, [product])
+  useEffect(() => {
+    if (error) {
+      navigate('*')
+    }
+  })
   const queryConfig: ProductListConfig = { limit: 20, page: 1, category: product?.category._id }
   const { data: productList } = useQuery({
     queryKey: ['productList', queryConfig],
