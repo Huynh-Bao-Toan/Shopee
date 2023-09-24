@@ -1,0 +1,16 @@
+{
+  "account": {
+    "my account": "my account",
+    "my purchase": "my purchase",
+    "logout": "logout",
+    "login": "login",
+    "register": "register"
+  },
+  "search": {
+    "placeholder": "Super brand party"
+  },
+  "cart": {
+    "recently added products": "Recently Added Products",
+    "View My Shopping Cart": "View My Shopping Cart"
+  }
+}

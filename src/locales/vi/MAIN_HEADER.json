@@ -1,0 +1,16 @@
+{
+  "account": {
+    "my account": "tài khoản của tôi",
+    "my purchase": "đơn mua",
+    "logout": "đăng xuất",
+    "login": "đăng nhập",
+    "register": "đăng ký"
+  },
+  "search": {
+    "placeholder": "Siêu tiệc thương hiệu"
+  },
+  "cart": {
+    "recently added products": "sản phẩm mới thêm",
+    "View My Shopping Cart": "xem giỏ hàng"
+  }
+}

@@ -13,7 +13,9 @@ import { formatPrice } from '~/utils/formatPrice'
 import noProductImage from '~/assets/images/noProduct.png'
 import NavbarHeader from '../NavbarHeader'
 import useSearchProduct from '~/hooks/useSearchProduct'
+import { useTranslation } from 'react-i18next'
 function MainHeader() {
+  const { t } = useTranslation('main_header')
   const { onSubmit, register } = useSearchProduct()
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
   const { data: purchasesInCartData } = useQuery({
@@ -40,7 +42,7 @@ function MainHeader() {
             <form className='flex items-center bg-white w-full h-full p-3 rounded-md' onSubmit={onSubmit}>
               <Input
                 type='text'
-                placeholder='Siêu tiệc thương hiệu'
+                placeholder={t('search.placeholder')}
                 classInput='text-sm bg-transparent w-full outlineNone border-none text-[#333] h-full outline-none '
                 classError=''
                 classWrapper='flex-1 mr-3'
@@ -57,7 +59,7 @@ function MainHeader() {
               renderPopOver={
                 purchasesInCartData?.data.data && purchasesInCartData?.data.data.length > 0 ? (
                   <Fragment>
-                    <h3 className='text-gray-400 text-sm capitalize'>sản phẩm mới thêm</h3>
+                    <h3 className='text-gray-400 text-sm capitalize'>{t('cart.recently added products')}</h3>
                     <div className='mt-5'>
                       {purchasesInCartData?.data.data.slice(0, MAX_PURCHASES_CART_HEADER).map((purchase, index) => {
                         return (
@@ -86,7 +88,7 @@ function MainHeader() {
                         to={privateRoutesPath.cart}
                         className='rounded-sm py-2 px-3 capitalize bg-orange text-sm text-white border-none outline-none cursor-pointer'
                       >
-                        xem giỏ hàng
+                        {t('cart.View My Shopping Cart')}
                       </Link>
                     </div>
                   </Fragment>

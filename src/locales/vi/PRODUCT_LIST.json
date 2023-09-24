@@ -1,0 +1,22 @@
+{
+  "aside filter": {
+    "all categories": "tất cả danh mục",
+    "search filter": "bộ lọc tìm kiếm",
+    "Price Range": "khoảng giá",
+    "apply": "áp dụng",
+    "min price": "từ",
+    "max price": "đến",
+    "rating": "đánh giá",
+    "up": "trở lên",
+    "clear all": "xóa tất cả"
+  },
+  "sort": {
+    "sort by": "sắp xếp theo",
+    "popular": "phổ biến",
+    "lastest": "mới nhất",
+    "top sales": "bán chạy",
+    "price": "giá",
+    "low to hight": "Giá: Giá Thấp Đến Cao",
+    "hight to low": "Giá: Giá Cao Đến Thấp"
+  }
+}

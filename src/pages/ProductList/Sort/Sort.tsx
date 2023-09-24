@@ -1,5 +1,6 @@
 import classNames from 'classnames'
 import omit from 'lodash/omit'
+import { useTranslation } from 'react-i18next'
 import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 import { icons } from '~/assets/icons'
 import { order as orderConstant, sortBy } from '~/constants/product.constants'
@@ -9,6 +10,7 @@ interface SortProps {
   pageSize: number
 }
 function Sort(props: SortProps) {
+  const { t } = useTranslation('product_list')
   const { queryConfig, pageSize } = props
   const { page, sort_by = 'view', order } = queryConfig
   const navigate = useNavigate()
@@ -21,7 +23,7 @@ function Sort(props: SortProps) {
   return (
     <div className='flex items-center justify-between bg-gray-300 mb-6 px-5 py-3'>
       <div className='flex items-center '>
-        <div className='text-[#555] text-sm  mr-3 flex items-center'>Sắp xếp theo</div>
+        <div className='text-[#555] text-sm  mr-3 flex items-center'>{t('sort.sort by')}</div>
         <Link
           to={{
             pathname: '/',
@@ -35,7 +37,7 @@ function Sort(props: SortProps) {
             }
           )}
         >
-          phổ biến
+          {t('sort.popular')}
         </Link>
         <Link
           to={{
@@ -50,7 +52,7 @@ function Sort(props: SortProps) {
             }
           )}
         >
-          mới nhất
+          {t('sort.lastest')}
         </Link>
         <Link
           to={{
@@ -65,7 +67,7 @@ function Sort(props: SortProps) {
             }
           )}
         >
-          bán chạy{' '}
+          {t('sort.top sales')}{' '}
         </Link>
         <select
           className={classNames(
@@ -79,13 +81,13 @@ function Sort(props: SortProps) {
           onChange={(e) => handleChangePrice(e)}
         >
           <option value='' disabled className='bg-white text-[#333]'>
-            Giá
+            {t('sort.price')}
           </option>
           <option value={orderConstant.asc} className='bg-white text-[#333]'>
-            Giá: giá thấp đến cao
+            {t('sort.low to hight')}
           </option>
           <option value={orderConstant.desc} className='bg-white text-[#333]'>
-            Giá: giá cao đến thấp
+            {t('sort.hight to low')}
           </option>
         </select>
       </div>

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { createSearchParams, useNavigate } from 'react-router-dom'
 import { IconKeys, icons } from '~/assets/icons'
 import { ProductListConfig } from '~/types/product.type'
@@ -5,6 +6,7 @@ interface RatingStarProps {
   queryConfig: { [key in keyof ProductListConfig]: string }
 }
 function RatingStar({ queryConfig }: RatingStarProps) {
+  const { t } = useTranslation('product_list')
   const navigate = useNavigate()
   const handleStarFilter = (ratingStar: number) => {
     navigate({
@@ -50,7 +52,7 @@ function RatingStar({ queryConfig }: RatingStarProps) {
                         </svg>
                       )
                   })}
-                {ratingStar !== 0 && <span className='text-sm ml-1'>trở lên</span>}
+                {ratingStar !== 0 && <span className='text-sm ml-1'>{t('aside filter.up')}</span>}
               </div>
             </li>
           )

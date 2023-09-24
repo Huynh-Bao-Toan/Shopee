@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import omit from 'lodash/omit'
+
 import { Controller, useForm } from 'react-hook-form'
 import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 import { icons } from '~/assets/icons'
@@ -9,11 +10,13 @@ import { categoriesResponse } from '~/types/categories.type'
 import { ProductListConfig } from '~/types/product.type'
 import { PriceSchema, priceSchema } from '~/utils/rulesForm'
 import RatingStar from '../RatingStar'
+import { useTranslation } from 'react-i18next'
 interface AsideFilterProps {
   categories: categoriesResponse
   queryConfig: { [key in keyof ProductListConfig]: string }
 }
 function AsideFilter(props: AsideFilterProps) {
+  const { t } = useTranslation('product_list')
   const { categories, queryConfig } = props
   const naviagte = useNavigate()
   const {
@@ -50,7 +53,7 @@ function AsideFilter(props: AsideFilterProps) {
         <div className='py-4 border-b border-slate-400  flex items-end '>
           <img src={icons.listBullet} alt='list-bullet' className='w-4 h-5' />
           <Link to={'/'} className='font-bold capitalize ml-2 no-underline'>
-            Tất cả danh mục
+            {t('aside filter.all categories')}
           </Link>
         </div>
         <div className=' py-4 pl-3'>
@@ -84,10 +87,10 @@ function AsideFilter(props: AsideFilterProps) {
       <div className='ml-4'>
         <div className='py-4 border-b border-slate-400  flex items-center '>
           <img src={icons.funnel} alt='list-bullet' className='w-4 h-5' />
-          <span className='font-bold capitalize ml-3'>bộ lọc tìm kiếm</span>
+          <span className='font-bold capitalize ml-3'> {t('aside filter.search filter')}</span>
         </div>
         <div className=' py-4'>
-          <div className='text-sm capitalize mb-3'>khoảng giá</div>
+          <div className='text-sm capitalize mb-3'> {t('aside filter.Price Range')}</div>
           <form onSubmit={onSubmit}>
             <div className='flex items-center justify-between'>
               <Controller
@@ -96,7 +99,7 @@ function AsideFilter(props: AsideFilterProps) {
                 render={({ field }) => {
                   return (
                     <InputNumber
-                      placeholder='₫ TỪ'
+                      placeholder={`₫ ${t('aside filter.min price')}`}
                       type='text'
                       classWrapper='max-h-[40px] mb-3'
                       onChange={(e) => {
@@ -116,7 +119,7 @@ function AsideFilter(props: AsideFilterProps) {
                 render={({ field }) => {
                   return (
                     <InputNumber
-                      placeholder='₫ ĐẾN'
+                      placeholder={`₫ ${t('aside filter.max price')}`}
                       type='text'
                       classWrapper='max-h-[40px] mb-3'
                       onChange={(e) => {
@@ -131,15 +134,15 @@ function AsideFilter(props: AsideFilterProps) {
               />
             </div>
             <div className='mt-1 text-sm text-red-600 dark:text-red-500 text-center'>{errors.price_min?.message}</div>
-            <Button nameBtn='Áp dụng' />
+            <Button nameBtn={t('aside filter.apply')} />
           </form>
         </div>
         <div className=' py-4'>
-          <div className='text-sm capitalize mb-3'>đánh giá</div>
+          <div className='text-sm capitalize mb-3'>{t('aside filter.rating')}</div>
           <RatingStar queryConfig={queryConfig} />
         </div>
         <div className='mt-3'>
-          <Button nameBtn='xóa tất cả' onClick={handleFilterClear} />
+          <Button nameBtn={t('aside filter.clear all')} onClick={handleFilterClear} />
         </div>
       </div>
     </div>
