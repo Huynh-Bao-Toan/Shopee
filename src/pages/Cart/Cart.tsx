@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 import { buyProducts, deletePurchases, getPurchases, updatePurchases } from '~/apis/purchases.api'
 import Button from '~/components/Button/Button'
 import QuantityController from '~/components/QuantityController'
@@ -116,6 +117,10 @@ function Cart() {
 
   return (
     <div className='bg-neutral-100 py-10'>
+      <Helmet>
+        <title>Shopee Clone | Giỏ hàng</title>
+        <meta name='description' content='Trang giỏ hàng' />
+      </Helmet>
       <div className='max-w-7xl mx-auto'>
         <div className='overflow-auto'>
           <div className='min-w-[1000px]'>

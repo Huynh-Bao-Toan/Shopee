@@ -15,6 +15,8 @@ import { addPurchases } from '~/apis/purchases.api'
 import { purchasesStatus } from '~/constants/purchases.constants'
 import { useAppDispatch } from '~/hooks/useAppDispatch'
 import { setProductListBuyNow } from '~/redux/features/cart/cartSlice'
+import { Helmet } from 'react-helmet-async'
+import { htmlToText } from 'html-to-text'
 
 function ProductDetail() {
   const dispatch = useAppDispatch()
@@ -115,6 +117,17 @@ function ProductDetail() {
   if (!product) return null
   return (
     <div className='max-w-7xl mx-auto py-10'>
+      <Helmet>
+        <title>Shopee Clone | {`${product.name}`}</title>
+        <meta
+          name='description'
+          content={htmlToText(product.description, {
+            limits: {
+              maxInputLength: 150
+            }
+          })}
+        />
+      </Helmet>
       <div className='bg-white rounded-md p-3'>
         <div className='grid grid-cols-12 gap-9'>
           <div className='col-span-5'>

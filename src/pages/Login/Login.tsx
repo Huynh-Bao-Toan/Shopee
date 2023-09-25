@@ -12,6 +12,7 @@ import { setIsAuthenticated, setUserInfo } from '~/redux/features/auth/authSlice
 import { publicRoutesPath } from '~/constants/routes.constant'
 import Button from '~/components/Button/Button'
 import shopeeBg from '~/assets/images/sg-11134004-7rbk0-lkqed7pgsfw7b1.png'
+import { Helmet } from 'react-helmet-async'
 
 type Inputs = LoginSchema
 function Login() {
@@ -68,6 +69,10 @@ function Login() {
   }
   return (
     <div className='bg-orange w-full'>
+      <Helmet>
+        <title>Shopee Clone | Đăng nhập</title>
+        <meta name='description' content='Trang đăng nhập' />
+      </Helmet>
       <div
         className='max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-5 bg-contain bg-no-repeat bg-center min-h-[600px]'
         style={{ backgroundImage: `url(${shopeeBg})` }}
@@ -113,6 +118,7 @@ function Login() {
             </div>
           </form>
         </div>
+        H
       </div>
     </div>
   )

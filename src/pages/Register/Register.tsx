@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm, SubmitHandler } from 'react-hook-form'
+import { Helmet } from 'react-helmet-async'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
 import omit from 'lodash/omit'
@@ -13,6 +14,7 @@ import { setIsAuthenticated, setUserInfo } from '~/redux/features/auth/authSlice
 import { publicRoutesPath } from '~/constants/routes.constant'
 import Button from '~/components/Button/Button'
 import shopeeBg from '~/assets/images/sg-11134004-7rbk0-lkqed7pgsfw7b1.png'
+
 type Inputs = RegisterSchema
 function Register() {
   const dispatch = useAppDispatch()
@@ -70,6 +72,10 @@ function Register() {
   }
   return (
     <div className='bg-orange w-full'>
+      <Helmet>
+        <title>Shopee Clone | Đăng ký</title>
+        <meta name='description' content='Trang đăng ký' />
+      </Helmet>
       <div
         className='max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-5 bg-contain bg-no-repeat bg-center min-h-[600px]'
         style={{ backgroundImage: `url(${shopeeBg})` }}

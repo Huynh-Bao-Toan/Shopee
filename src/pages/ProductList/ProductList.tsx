@@ -7,6 +7,7 @@ import Panigation from '~/components/Panigation'
 import { getCategories } from '~/apis/categories.api'
 import useQueryConfig from '~/hooks/useQueryConfig'
 import { ProductListConfig } from '~/types/product.type'
+import { Helmet } from 'react-helmet-async'
 
 function ProductList() {
   const queryConfig = useQueryConfig()
@@ -22,6 +23,10 @@ function ProductList() {
   })
   return (
     <div className=''>
+      <Helmet>
+        <title>Shopee Clone | Trang chủ</title>
+        <meta name='description' content='Trang chủ' />
+      </Helmet>
       <div className='py-5 grid grid-cols-12 gap-4 mx-auto max-w-7xl'>
         <div className='col-span-2'>
           <AsideFilter categories={categories?.data.data ?? []} queryConfig={queryConfig} />
@@ -43,6 +48,7 @@ function ProductList() {
             </>
           )}
         </div>
+        H
       </div>
     </div>
   )

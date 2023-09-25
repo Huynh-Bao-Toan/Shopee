@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import classNames from 'classnames'
+import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
 import { getPurchases } from '~/apis/purchases.api'
 import { purchasesStatus } from '~/constants/purchases.constants'
@@ -35,6 +36,10 @@ function HistoryPurchase() {
   const purchasesInCart = purchasesInCartData?.data.data
   return (
     <>
+      <Helmet>
+        <title>Shopee Clone | Lịch sử đơn hàng</title>
+        <meta name='description' content='Trang lịch sử đơn hàng' />
+      </Helmet>
       <div className='sticky rounded-sm bg-white shadow grid grid-cols-6 items-center'>
         {purchasesTabs.map((tab) => {
           return (

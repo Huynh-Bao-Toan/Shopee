@@ -11,6 +11,7 @@ import { NoUndefinedField, ResponseApi } from '~/types/utils.type'
 import { isAxiosUnprocessableEntityError } from '~/utils/axiosHandleError'
 import { UserSchema, userSchema } from '~/utils/rulesForm'
 import { ObjectSchema } from 'yup'
+import { Helmet } from 'react-helmet-async'
 type FormData = NoUndefinedField<Pick<UserSchema, 'password' | 'new_password' | 'confirm_password'>>
 const newPasswordSchema = userSchema.pick(['password', 'new_password', 'confirm_password'])
 function ChangePassword() {
@@ -52,6 +53,10 @@ function ChangePassword() {
   })
   return (
     <div className='rounded-sm bg-white px-2 pb-10 shadow md:px-7 md:pb-20'>
+      <Helmet>
+        <title>Shopee Clone | Đổi mật khẩu</title>
+        <meta name='description' content='Trang đổi mật khẩu' />
+      </Helmet>
       <div className='border-b border-b-gray-200 py-6'>
         <h1 className='text-lg font-medium capitalize text-gray-900'>Đổi Mật Khẩu</h1>
         <div className='mt-1 text-sm text-gray-700'>Quản lý thông tin hồ sơ để bảo mật tài khoản</div>
