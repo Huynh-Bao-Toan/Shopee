@@ -27,6 +27,7 @@ export const handleClearLS = () => {
 export const handleAddUserProfile = (body: User) => {
   localStorage.setItem('user_info', JSON.stringify(body))
 }
+
 export function handleGetUserProfile() {
   const newProfile = localStorage.getItem('user_info')
   return newProfile ? JSON.parse(newProfile) : null

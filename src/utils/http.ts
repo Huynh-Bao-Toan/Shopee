@@ -10,7 +10,7 @@ import {
 } from './auth'
 import { isAxiosExpiredTokenError, isAxiosUnauthorizedError } from './axiosHandleError'
 import { RefreshTokenReponse } from '~/types/auth.type'
-class Http {
+export class Http {
   instance: AxiosInstance
   private access_token: string
   private refresh_token: string

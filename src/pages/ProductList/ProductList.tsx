@@ -48,7 +48,6 @@ function ProductList() {
             </>
           )}
         </div>
-        H
       </div>
     </div>
   )
