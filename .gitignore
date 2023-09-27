@@ -13,6 +13,8 @@ dist-ssr
 *.local
 stats.html
 coverage
+.yarn
+.yarnrc.yml
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
